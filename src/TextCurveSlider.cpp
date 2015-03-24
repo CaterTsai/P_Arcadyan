@@ -137,10 +137,12 @@ void TextCurveSlider::setCurveSliderData(string strDataXML, float fDuration, flo
 	for(int idx_ = 0; idx_ < iNum_; ++idx_)
 	{		
 		string strYear_ = xmlLoader_.getValue("TEXT_SLIDER:YEAR", "", idx_);
-		string strTitle_ = xmlLoader_.getValue("TEXT_SLIDER:TITLE", "", idx_);
+		string strText1_ = xmlLoader_.getValue("TEXT_SLIDER:TEXT1", "", idx_);
+		string strText2_ = xmlLoader_.getValue("TEXT_SLIDER:TEXT2", "", idx_);
+		string strText3_ = xmlLoader_.getValue("TEXT_SLIDER:TEXT3", "", idx_);
 
 		stTEXT_CURVE_ELEMENT	NewElement_;
-		this->createText(NewElement_.TextImg, strYear_, strTitle_);
+		this->createText(NewElement_.TextImg, strYear_, strText1_, strText2_, strText3_);
 		
 		//Random offset
 		ofPoint oOffset_(-cTEXT_WIDTH/2, ofRandom(-200, 200), 0);
@@ -173,7 +175,7 @@ void TextCurveSlider::setCurveSliderPath(ofPoint StartPos, ofPoint EndPos, ofPoi
 		_stTEXT_CURVE	TmpCurve_;
 
 		dT_ = dUnitT_ * idx_;
-		
+		TmpCurve_.IsDisplay = true;
 		TmpCurve_.Position = ofBezierPoint(StartPos, C1, C2, EndPos, dT_);
 		ofPoint Vector_ = ofBezierTangent(StartPos, C1, C2, EndPos, dT_).normalized();
 		if(Vector_.x <= 0)
@@ -293,7 +295,7 @@ void TextCurveSlider::RotateToForward()
 		
 		_AnimRotate.animateFromTo(_RegisterRotate, 90);
 		_AnimForward.setPosition(_RegisterPos);
-		_AnimForward.animateTo(ofPoint(_RegisterPos.x, _RegisterPos.y, -200));
+		_AnimForward.animateTo(ofPoint(_RegisterPos.x, _RegisterPos.y, cFORWARD_Z));
 
 		this->pauseSlider();		
 		_eRotateState = eTEXT_ROTATE_TO_FORWARD;
@@ -430,7 +432,7 @@ void TextCurveSlider::setupContanct()
 }
 
 //--------------------------------------------------------------
-void TextCurveSlider::createText(ofImage& TextImg, string strYear, string strText)
+void TextCurveSlider::createText(ofImage& TextImg, string strYear, string strText1, string strText2, string strText3)
 {
 	if(!_bIsContanctSetup)
 	{
@@ -446,8 +448,18 @@ void TextCurveSlider::createText(ofImage& TextImg, string strYear, string strTex
 	oTextFbo_.begin();
 	{	
 		ofSetColor(0,255,40);
-		_Font80.drawString(strYear, 0, _Font80.getLineHeight());
-		_Font30.drawString(strText, 0, _Font30.getLineHeight() + _Font80.getLineHeight());
+
+		int iDrawHeight_ = _Font80.getLineHeight();
+		_Font80.drawString(strYear, 0, _Font80.getLineHeight());		
+
+		iDrawHeight_ += _Font30.getLineHeight();
+		_Font30.drawString(strText1, 0, iDrawHeight_);
+
+		iDrawHeight_ += _Font30.getLineHeight();
+		_Font30.drawString(strText2, 0, iDrawHeight_);
+
+		iDrawHeight_ += _Font30.getLineHeight();
+		_Font30.drawString(strText3, 0, iDrawHeight_);
 	}
 	oTextFbo_.end();
 		
@@ -508,12 +520,6 @@ void TextCurveSlider::createText(ofImage& TextImg, string strYear, string strTex
 	TextImg.setFromPixels(oTmpPixel_.getPixels(), oAfterFilterFbo_.getWidth(), oAfterFilterFbo_.getHeight(), OF_IMAGE_COLOR_ALPHA, true);
 
 	ofPopStyle();
-}
-
-//--------------------------------------------------------------
-void TextCurveSlider::createText(ofImage& TextImg, string strYear, wstring wstrText)
-{
-	this->createText(TextImg, strYear, ws2s(wstrText));
 }
 
 //--------------------------------------------------------------

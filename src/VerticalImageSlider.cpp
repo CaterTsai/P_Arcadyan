@@ -59,13 +59,14 @@ void VirticalSlider::setupVirticalSlider(ofRectangle DisplayArea, float fInterva
 	this->updateDisplay();
 
 	_bIsDisplay = false;
+	_bCanMove = true;
 	_ImgIndex = 1;
 }
 
 //--------------------------------------------------------------
 void VirticalSlider::updateVirticalSlider(float fDelta)
 {
-	if(!_bIsDisplay)
+	if(!_bIsDisplay || !_bCanMove)
 	{
 		return;
 	}
@@ -149,14 +150,15 @@ void VirticalSlider::drawVirticalSlider(int x, int y)
 void VirticalSlider::resetVirticalSlider()
 {
 	_bIsDisplay = false;
+	_bCanMove = true;
 }
 
 //--------------------------------------------------------------
-void VirticalSlider::toRight()
+bool VirticalSlider::toRight()
 {
-	if(!_bIsDisplay || _bStartAnim)
+	if(!_bIsDisplay || _bStartAnim || !_bCanMove)
 	{
-		return;
+		return false;
 	}
 
 	_bStartAnim = true;
@@ -176,14 +178,15 @@ void VirticalSlider::toRight()
 
 	_AnimSlide.animateFromTo(0, _fInterval);
 	_AnimScale.animateFromTo(0.0, 1.0);
+	return true;
 }
 
 //--------------------------------------------------------------
-void VirticalSlider::toLeft()
+bool VirticalSlider::toLeft()
 {
-	if(!_bIsDisplay || _bStartAnim)
+	if(!_bIsDisplay || _bStartAnim || !_bCanMove)
 	{
-		return;
+		return false;
 	}
 	_bStartAnim = true;
 	_bIsToLeft = true;
@@ -202,6 +205,7 @@ void VirticalSlider::toLeft()
 
 	_AnimSlide.animateFromTo(0, _fInterval);
 	_AnimScale.animateFromTo(0.0, 1.0);
+	return true;
 }
 
 //--------------------------------------------------------------

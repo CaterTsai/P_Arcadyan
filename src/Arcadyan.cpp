@@ -40,8 +40,8 @@ void Arcadyan::setup()
 	//Timer
 	_fMainTimer = ofGetElapsedTimef();
 
-	ofToggleFullscreen();
-	ofHideCursor();
+	//ofToggleFullscreen();
+	//ofHideCursor();
 }
 
 //--------------------------------------------------------------
@@ -140,14 +140,13 @@ void Arcadyan::keyPressed(int key)
 		break;
 	case 'z':
 		{
-			if(_Arcadyan._Director.GetNowScenes()->GetScenesName() == NAME_MANAGER::S_GreenBuilding)
-			{
-				_Arcadyan.GreenbuildingZoomIn();
-			}
-			else if(_Arcadyan._Director.GetNowScenes()->GetScenesName() == NAME_MANAGER::S_Milestone)
-			{
-				_Arcadyan.MilestoneZoomIn();
-			}
+			//Start take picture
+			ofxAnimationImageElement* pCountdown_;
+			_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, pCountdown_);
+			pCountdown_->PlayAnimation();
+			pCountdown_->SetVisible(true);
+			//Stop photo frame slider
+			_PhotoFrameSlider.setCanMove(false);
 		}
 		break;
 	case 't':
@@ -171,14 +170,19 @@ void Arcadyan::keyPressed(int key)
 		break;
 	case 'r':
 		{
-			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
-			_PhotoFrameSlider.toRight();
+			if(_PhotoFrameSlider.toRight())
+			{
+				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
+			}
+			
 		}
 		break;
 	case 'l':
 		{
-			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
-			_PhotoFrameSlider.toLeft();
+			if(_PhotoFrameSlider.toLeft())
+			{
+				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
+			}
 		}
 		break;
 	case '1':
@@ -288,6 +292,10 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 		ofxDynamicImageElement* pPhotoFrame_;
 		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_PhotoFrame, pPhotoFrame_);
 		pPhotoFrame_->updateImg(NowPhotoFrame_);
+	}
+	else if(e == NAME_MANAGER::T_TakePhoto)
+	{
+		this->takePicture();
 	}
 	else
 	{
@@ -410,4 +418,54 @@ void Arcadyan::onTextSlider(bool& e)
 
 	//_Arcadyan.playCityLoop();
 	_Arcadyan._Director.TransitTo(TRANSITION_TYPE::eTRANSITION_FADE);
+}
+
+//--------------------------------------------------------------
+void Arcadyan::takePicture()
+{
+	ofImage PhotoFrame_, Photo_, MixResult_;
+	ofxWebcamElement* pWebcam_ = nullptr;
+	ofxDynamicImageElement* pPhoto_ = nullptr;
+
+	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_WEBCAM, pWebcam_);
+	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_Photo, pPhoto_);
+
+	//get webcam image
+	pWebcam_->getImage(Photo_);
+
+	//get photo frame
+	_PhotoFrameSlider.getNowImage(PhotoFrame_);
+
+	//mix the photo
+	ofFbo	Canvas_;
+	Canvas_.allocate(Photo_.getWidth(), Photo_.getHeight(), GL_RGBA);
+	Canvas_.begin();
+	{
+		ofPushStyle();
+		ofSetColor(255);
+		ofEnableAlphaBlending();
+		
+		ofPushMatrix();
+		{
+			ofTranslate(Photo_.getWidth(), 0);
+			ofScale(-1, 1);
+			Photo_.draw(0, 0);
+		}
+		ofPopMatrix();
+		
+		PhotoFrame_.draw(0, 0);
+		ofPopStyle();
+	}
+	Canvas_.end();
+
+	ofPixels pix_;
+	Canvas_.readToPixels(pix_);
+	MixResult_.setFromPixels(pix_.getPixels(), Canvas_.getWidth(), Canvas_.getHeight(), OF_IMAGE_COLOR_ALPHA);
+	
+	pPhoto_->updateImg(MixResult_);
+	pPhoto_->SetVisible(true);
+
+	//save the photo
+	string strPhotoName_ = ofGetTimestampString("photos/%Y%m%d_%H%M.jpg");
+	MixResult_.saveImage(strPhotoName_);
 }

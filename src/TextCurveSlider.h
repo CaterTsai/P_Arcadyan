@@ -43,6 +43,11 @@ typedef struct _stTEXT_CURVE_ELEMENT
 #pragma region STRUCT Curve path
 typedef struct _stTEXT_CURVE
 {
+	_stTEXT_CURVE()
+		:IsDisplay(true)
+		,Position(0)
+		,fRotate(0)
+	{}
 	ofPoint		Position;
 	float		fRotate;
 	bool		IsDisplay;
@@ -132,8 +137,8 @@ public:
 	void setupContanct();
 private:
 	
-	void createText(ofImage& TextImg, string strYear, string wstrText);
-	void createText(ofImage& TextImg, string strYear, wstring wstrText);
+	void createText(ofImage& TextImg, string strYear, string strText1, string strText2, string strText3);
+	
 	void CreateGaussian(float (&afWeight)[cKERNEL_SIZE], float (&afOffset_)[cKERNEL_SIZE]);
 	string ws2s(const wstring& wstr);
 

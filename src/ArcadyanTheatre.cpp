@@ -1,6 +1,5 @@
 #include "ArcadyanTheatre.h"
 
-
 //--------------------------------------------------------------
 void ArcadyanTheatre::setupTheatre()
 {
@@ -54,9 +53,10 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_PictureBackplane, "images/PicturePlane.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_ChoosePhotoframeText, "images/PhotoText_1.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_CheeseText, "images/PhotoText_2.png", eBLEND_ALPHA));
-	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PictureCountdown, eBLEND_ALPHA));
+	_Director.AddActor(new ofxAnimationImageActor(NAME_MANAGER::A_PictureCountdown, "images/countdown/", eBLEND_ALPHA));
 	_Director.AddActor(new ofxWebcamActor(NAME_MANAGER::A_WEBCAM, 0, 60,  WEBCAM_WIDTH, WEBCAM_HEIGHT));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PhotoFrame, eBLEND_ALPHA));
+	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_Photo));
 
 	///////////////////////
 	//Plane
@@ -136,9 +136,11 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddElement(NAME_MANAGER::E_TakePictureBackplane, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureBackplane, 0, ofPoint(0));
 	_Director.AddElement(NAME_MANAGER::E_ChoosePhotoframeText, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_ChoosePhotoframeText, 1, ofPoint(1497, 222));
 	_Director.AddElement(NAME_MANAGER::E_CheeseText, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_CheeseText, 2, ofPoint(1497, 265), false);
-	//_Director.AddElement(NAME_MANAGER::E_TakePictureCountdown, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureCountdown, 3, ofPoint(0), false);
-	_Director.AddElement(NAME_MANAGER::E_WEBCAM, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_WEBCAM, 5, ofPoint(518, 142));
-	_Director.AddElement(NAME_MANAGER::E_PhotoFrame, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PhotoFrame, 6, ofPoint(518, 142));
+	_Director.AddElement(NAME_MANAGER::E_WEBCAM, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_WEBCAM, 3, ofPoint(518, 142));
+	_Director.AddElement(NAME_MANAGER::E_TakePictureCountdown, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureCountdown, 4, ofPoint(910, 300), false);
+	_Director.AddElement(NAME_MANAGER::E_PhotoFrame, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PhotoFrame, 5, ofPoint(518, 142));
+	_Director.AddElement(NAME_MANAGER::E_Photo, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_Photo, 6, ofPoint(518, 142), false);
+	
 
 	///////////////////////
 	//Element Setting
@@ -203,7 +205,16 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.GetElementPtr(NAME_MANAGER::E_PhotoFrame, pDyamnicElement_);
 	pDyamnicElement_->m_stElementBase.fScale = 0.467;
 	pDyamnicElement_->m_stElementBaseBackup.fScale = 0.467;
-	
+
+	_Director.GetElementPtr(NAME_MANAGER::E_Photo, pDyamnicElement_);
+	pDyamnicElement_->m_stElementBase.fScale = 0.467;
+	pDyamnicElement_->m_stElementBaseBackup.fScale = 0.467;
+
+	ofxAnimationImageElement* pAnimationElement_;
+	_Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, pAnimationElement_);
+	pAnimationElement_->SetSPF(1);
+	pAnimationElement_->SetEvent(true);
+
 	///////////////////////
 	//Setup each Scenes
 	///////////////////////
@@ -392,6 +403,16 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 	else if(e.strMessage == NAME_MANAGER::E_ProductTips)
 	{	
 		this->enableControlEvent(NAME_MANAGER::S_Product);
+	}
+
+	//Animation Element Event
+	if(e.strMessage == NAME_MANAGER::E_TakePictureCountdown)
+	{
+		string strEventMsg_ = NAME_MANAGER::T_TakePhoto;
+		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
+
+		//Close webcam
+		
 	}
 
 	//Animation Event

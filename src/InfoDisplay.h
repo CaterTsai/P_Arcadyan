@@ -89,7 +89,6 @@ private:
 	ofxTrueTypeFontUC	_FontMS50;
 	ofxTrueTypeFontUC	_FontMS40;
 
-
 ////////////////////////////
 //Backplane
 ////////////////////////////

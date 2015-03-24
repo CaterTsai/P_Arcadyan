@@ -4,10 +4,8 @@
 #include <string>
 using namespace std;
 
-
 #define CREATE_VALUE(NAME) static const string NAME = #NAME;
 #define CREATE_VALUE_WITH_VALUE(NAME, VALUE) static const string NAME = VALUE;
-
 
 namespace NAME_MANAGER
 {
@@ -54,6 +52,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_PictureCountdown);
 	CREATE_VALUE(A_WEBCAM);
 	CREATE_VALUE(A_PhotoFrame);
+	CREATE_VALUE(A_Photo);
 
 ///////////////////////////////////////
 // Plane
@@ -109,6 +108,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(E_TakePictureCountdown);
 	CREATE_VALUE(E_WEBCAM);
 	CREATE_VALUE(E_PhotoFrame);
+	CREATE_VALUE(E_Photo);
 
 ///////////////////////////////////////
 // Animation Init
@@ -134,6 +134,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(T_PlayMilestone);
 	CREATE_VALUE(T_TakePictureIsReady);
 	CREATE_VALUE(T_ChangePhotoFrame);
+	CREATE_VALUE(T_TakePhoto);
 
 ///////////////////////////////////////
 // Control Event

@@ -23,8 +23,8 @@ public:
 	void updateVirticalSlider(float fDelta);
 	void drawVirticalSlider(int x, int y);
 	void resetVirticalSlider();
-	void toRight();
-	void toLeft();
+	bool toRight();
+	bool toLeft();
 	
 	inline void getNowImage(ofImage& refImage)
 	{
@@ -34,11 +34,16 @@ public:
 	{
 		_bIsDisplay = bValue;
 	}
+	inline void setCanMove(bool bValue = true)
+	{
+		_bCanMove = bValue;
+	}
 
 private:
 	void updateDisplay();
 private:
 	bool					_bIsDisplay;
+	bool					_bCanMove;
 
 	ofFbo					_Display;
 	float					_fInterval;
@@ -46,13 +51,13 @@ private:
 	deque<stSLIDER_UNIT>	_SliderList;
 	ofImage					_Frame;
 	int						_ImgIndex;
+
 	//move animation
 	bool					_bStartAnim;
 	bool					_bIsToLeft;
 	ofxAnimatableFloat		_AnimSlide;
 
 	//scale animation
-
 	ofxAnimatableFloat		_AnimScale;
 };
 

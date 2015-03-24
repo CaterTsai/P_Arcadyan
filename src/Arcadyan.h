@@ -96,6 +96,8 @@ private:
 //-------------------------------------------------
 //Photo Frame Slider
 //-------------------------------------------------
+public:
+	void takePicture();
 private:
 	VirticalSlider	_PhotoFrameSlider;
 };

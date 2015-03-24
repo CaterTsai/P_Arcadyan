@@ -11,7 +11,7 @@ static const int cTEXT_HEIGHT = 300;
 static const int cKERNEL_SIZE = 81;
 static const float cGAUSSIAN_SIGMA = 5.0;
 static const int cBASE_ALPHA = 30;
-
+static const int cFORWARD_Z = -400;
 #define POW_SIGMA (cGAUSSIAN_SIGMA*cGAUSSIAN_SIGMA)
 
 typedef enum eTEXT_ROTATE_STATE
