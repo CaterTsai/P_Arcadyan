@@ -4,8 +4,8 @@
 #include "protocol.h"
 #include "ControlEvent.h"
 #include "ofGstVideoPlayer.h"
+#include "ofxHapPlayer.h"
 #include "ofxTheatreDirector.h"
-#include "NameManager.h"
 #include "ofxAnimatableFloat.h"
 //-------------------------------------------------
 //Theatre
@@ -17,7 +17,6 @@ public:
 	void updateTheatre(float fDelta, ofPoint CtrlPos = ofPoint(0));
 	void drawTheatre();
 	void resetTheatre();
-
 
 	void TheatreAnimInit(string strScenes);
 	void onTheatreEvent(ofxTheatreEventArgs& e);

@@ -142,6 +142,20 @@ namespace NAME_MANAGER
 	CREATE_VALUE(C_GreenBuilding);
 	CREATE_VALUE(C_Milestone);
 	CREATE_VALUE(C_Product);
+
+
+//-------------------------------------------------
+//Gesture
+//-------------------------------------------------
+	CREATE_VALUE(G_WAVE_RIGHT);
+	CREATE_VALUE(G_OPEN);
+
+//-------------------------------------------------
+//Audio & BGM
+//-------------------------------------------------
+	CREATE_VALUE(BGM_OPEN);
+	CREATE_VALUE(BGM_INTRO);
+	CREATE_VALUE(BGM_MAIN);
 };
 
 

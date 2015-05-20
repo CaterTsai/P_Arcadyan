@@ -3,7 +3,7 @@
 
 #include "protocol.h"
 #include "ofGstVideoPlayer.h"
-
+#include "ofxHapPlayer.h"
 class GreenBuildingCtrl
 {
 public:
@@ -21,11 +21,11 @@ private:
 private:
 	bool			_bIsStart;
 	bool			_bIsRotate;
-	
 	ofVideoPlayer	_GreenBuilding;
 	int				_iTotalFrame;
-	ofVideoPlayer	_GreenBuildingLight;
+	ofVideoPlayer	_GreenBuildingLoop, _GreenBuildingLight;
 
+	bool			_bFlip;
 	ofImage			_ArrowLeft, _ArrowRight;
 };
 

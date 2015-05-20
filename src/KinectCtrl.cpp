@@ -1,5 +1,6 @@
 #include "KinectCtrl.h"
 
+#pragma region Base Method
 void KinectCtrl::setupKinectCtrl()
 {
 	_CTKinect.startThread();
@@ -7,7 +8,9 @@ void KinectCtrl::setupKinectCtrl()
 	{
 		_bIsSetup = true;
 		_CTKinect.enableSkeleton();
+		this->setupGesture();
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -33,6 +36,9 @@ void KinectCtrl::updateKinectCtrl()
 	_CtrlPos = RightHand_ - Center_;
 	_CtrlPos.x = ofMap(_CtrlPos.x, -BASE_KINECT_WIDTH, BASE_KINECT_WIDTH, 0, WINDOW_WIDTH);
 	_CtrlPos.y = ofMap(_CtrlPos.y, -BASE_KINECT_HEIGHT, BASE_KINECT_HEIGHT, 0, WINDOW_HEIGHT);
+
+	//Gesture
+	_GestureMgr.UpdateGestureManager(stSkeleton_);
 }
 
 //--------------------------------------------------------------
@@ -92,3 +98,39 @@ void KinectCtrl::drawBody(ofPoint Pos, int iWidth, int iHeight)
 	
 	}
 }
+#pragma endregion
+
+#pragma region Gesture
+void KinectCtrl::setupGesture()
+{
+	_GestureMgr.SetupGestureManager();
+
+	//Open
+	GestureSegmentList OpenSegmentList_;
+	OpenSegmentList_.push_back( make_shared<OpenSegment1>() );
+	OpenSegmentList_.push_back( make_shared<OpenSegment2>() );
+	OpenSegmentList_.push_back( make_shared<OpenSegment3>() );
+	_GestureMgr.AddGesture(NAME_MANAGER::G_OPEN, OpenSegmentList_);
+
+	//Open
+	GestureSegmentList WaveRightSegmentList_;
+	WaveRightSegmentList_.push_back( make_shared<WaveRightSegment1>() );
+	WaveRightSegmentList_.push_back( make_shared<WaveRightSegment2>() );
+	WaveRightSegmentList_.push_back( make_shared<WaveRightSegment1>() );
+	WaveRightSegmentList_.push_back( make_shared<WaveRightSegment2>() );
+	_GestureMgr.AddGesture(NAME_MANAGER::G_WAVE_RIGHT, WaveRightSegmentList_);
+}
+
+//--------------------------------------------------------------
+void KinectCtrl::startGestureCheck(const string& strGesutreName)
+{
+	_GestureMgr.startCheck(strGesutreName);
+}
+
+//--------------------------------------------------------------
+void KinectCtrl::stopGesutreCheck()
+{
+	_GestureMgr.stopCheck();
+}
+#pragma endregion
+

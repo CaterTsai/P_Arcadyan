@@ -7,15 +7,8 @@ VideoManager::VideoManager():
 	_bIsPlay(false),
 	_bAllVideoDone(false),
 	_iVideoIndex(0),
-	_bLoadSubtitle(false),
 	_bNeedBackground(false)
 {}
-
-//--------------------------------------------------------------
-void VideoManager::setupVideoManager()
-{
-	this->loadSubtitle();
-}
 
 //--------------------------------------------------------------
 void VideoManager::updateVideoManager()
@@ -53,18 +46,15 @@ void VideoManager::updateVideoManager()
 		_BackgroundVideo.update();
 	}
 	
-	//Subtitles
-	if(_bIsPlay && !_VideoList[_iVideoIndex].bIsEmpty && _bLoadSubtitle)
+	//Update Now time
+	if(_bIsPlay && !_VideoList[_iVideoIndex].bIsEmpty)
 	{
 		float fNewDuration_ =  _VideoList[_iVideoIndex].VideoPlayer.getDuration() * _VideoList[_iVideoIndex].VideoPlayer.getPosition();
-		float fVideoTime_ = _VideoTimer;
+		_NowTime = _VideoTimer;
 		if(fNewDuration_ > 0.0)
 		{
-			fVideoTime_ += fNewDuration_;
-		}
-		//cout<< fVideoTime_<<endl;
-		_pSubtitleMgr->UpdateSubtitleMgr(fVideoTime_);
-		
+			_NowTime += fNewDuration_;
+		}		
 	}
 }
 
@@ -89,11 +79,6 @@ void VideoManager::drawVideoManager()
 		else
 		{
 			_VideoList[_iVideoIndex].VideoPlayer.draw(0, 0);
-		}
-	
-		if(_bLoadSubtitle)
-		{	
-			_pSubtitleMgr->DrawSubtitleMgr();
 		}
 	}
 	ofPopStyle();
@@ -219,9 +204,7 @@ void VideoManager::play()
 			_bNeedBackground = (_VideoList[_iVideoIndex].bHaveAlpha);
 			_VideoList[_iVideoIndex].VideoPlayer.play();
 		}
-
 		_BackgroundVideo.play();
-		_pSubtitleMgr->Start();
 	}
 }
 
@@ -318,24 +301,4 @@ void VideoManager::gotoNextVideo()
 			ofNotifyEvent(VideoEvent, _VideoList[_iVideoIndex].strName);
 		}
 	}
-}
-
-//--------------------------------------------------------------
-void VideoManager::loadSubtitle()
-{
-	_Plane.loadImage("images/backplane.png");
-	
-	_pSubtitleMgr = ofPtr<TimeSubtitleMgr>(new TimeSubtitleMgr("fonts/msjhbd.ttf", 50, ofPoint(960, 976)));
-	_pSubtitleMgr->AddSubtitle(::ws2s(L"請面對螢幕揮動您的手，啟動本次體驗"), _Plane, 11, 6);
-	_pSubtitleMgr->AddSubtitle(::ws2s(L"您好，歡迎您蒞臨智易科技"), _Plane, 19, 5);
-	_pSubtitleMgr->AddSubtitle(::ws2s(L"智易科技為網路設備的領導品牌"), _Plane, 25, 5);
-	_pSubtitleMgr->AddSubtitle(::ws2s(L"我們同時強調人性的溫度"), _Plane, 40, 5);
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"延展‧拉長，長頸鹿12年舌頭風味"), _Plane, 1, "audios/VO/part_1.wav");
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"長頸鹿，將帶你探索12年舌頭的故事"), _Plane, 22, "audios/VO/part_2.wav");
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"舌頭像香檳一樣，只有特定長頸鹿才能伸展"), _Plane, 37, "audios/VO/part_3.wav");
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"舌頭伸長，就能吃到葡萄"), _Plane, 45, "audios/VO/part_5.wav");
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"12年的長頸鹿，是舌頭最長的一種"), _Plane, 55, "audios/VO/part_8.wav");
-	//_pSubtitleMgr->AddSubtitle(::ws2s(L"快去Artgital地下室，體驗12年的舌頭風味"), _Plane, 70, "audios/VO/part_11.wav");
-
-	_bLoadSubtitle = true;
 }

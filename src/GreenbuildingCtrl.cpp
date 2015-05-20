@@ -2,22 +2,24 @@
 
 void GreenBuildingCtrl::setupGreenBuildingCtrl()
 {
-	//_GreenBuilding.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
-	_GreenBuilding.setLoopState(ofLoopType::OF_LOOP_NONE);
+	_GreenBuildingLoop.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
+	_GreenBuildingLoop.setLoopState(ofLoopType::OF_LOOP_NORMAL);
+	_GreenBuildingLoop.loadMovie("videos/Greenbuilding_loop.mp4");
+
+	_GreenBuilding.setPlayer(ofPtr<ofxHapPlayer>(new ofxHapPlayer));
+	_GreenBuilding.setLoopState(ofLoopType::OF_LOOP_NORMAL);
 	_GreenBuilding.loadMovie("videos/Greenbuilding_control.mov");
 	_iTotalFrame = _GreenBuilding.getTotalNumFrames();
 
-	_GreenBuildingLight.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
-	_GreenBuildingLight.setPixelFormat(ofPixelFormat::OF_PIXELS_RGBA);
-	_GreenBuilding.setLoopState(ofLoopType::OF_LOOP_NORMAL);
+	_GreenBuildingLight.setPlayer(ofPtr<ofxHapPlayer>(new ofxHapPlayer));
+	_GreenBuildingLight.setLoopState(ofLoopType::OF_LOOP_NORMAL);
 	_GreenBuildingLight.loadMovie("videos/Greenbuilding_nearlight.mov");
 
 	_ArrowLeft.loadImage("images/ArrowLeft.png");
 	_ArrowRight.loadImage("images/ArrowRight.png");
-
-
 	_bIsStart = false;
 	_bIsRotate = false;
+	_bFlip = false;
 }
 
 //--------------------------------------------------------------
@@ -29,7 +31,15 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	}
 
 	_GreenBuilding.update();
+	_GreenBuildingLoop.update();
 	_GreenBuildingLight.update();
+
+	if(!_bFlip)
+	{
+		_GreenBuildingLoop.play();
+		_bFlip = true;
+
+	}
 
 	if(CtrlPos.x >= 0 && CtrlPos.x < 250)
 	{
@@ -57,9 +67,13 @@ void GreenBuildingCtrl::drawGreenBuildingCtrl()
 	{
 		ofSetColor(255);
 		ofDisableBlendMode();		
-		_GreenBuilding.draw(0, 0);
+		if(_bFlip)
+		{
+			_GreenBuildingLoop.draw(0, 0);
+		}
 
 		ofEnableAlphaBlending();
+		_GreenBuilding.draw(0, 0);
 		_GreenBuildingLight.draw(0, 0);
 
 		_ArrowLeft.draw(100, ofGetWindowHeight()/2 - _ArrowLeft.height/2);
@@ -78,8 +92,10 @@ void GreenBuildingCtrl::startGreenBuidling()
 
 	_bIsStart = true;
 	_bIsRotate = true;
+	_bFlip = false;
 	_GreenBuilding.play();
 	_GreenBuilding.setSpeed(0.0);
+	
 	_GreenBuildingLight.play();
 }
 
@@ -95,6 +111,8 @@ void GreenBuildingCtrl::stopGreenBuidling()
 	_GreenBuilding.setFrame(0);
 	_GreenBuilding.update();
 	_GreenBuilding.stop();
+
+	_GreenBuildingLoop.stop();
 	_GreenBuildingLight.stop();
 }
 

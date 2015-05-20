@@ -2,8 +2,6 @@
 #define _VIDEO_MANAGER_
 
 #include "protocol.h"
-#include "ofxSubtitlesMgr.h"
-#include "ofxXmlSettings.h"
 
 struct stVideoUnit
 {
@@ -25,7 +23,6 @@ class VideoManager
 {
 public:
 	VideoManager();
-	void setupVideoManager();
 	void updateVideoManager();
 	void drawVideoManager();
 
@@ -33,7 +30,6 @@ public:
 //Video
 ////////////////////////////
 public:
-	
 	void addVideoWithSourcePlayer(string strFileName, string strVideoName, bool bIsLoop = false, bool bWaitLoop = false);
 	void addVideo(string strFileName, string strVideoName, ofPtr<ofBaseVideoPlayer> pPlayer, bool bHaveAlpha = false, bool bIsLoop = false, bool bWaitLoop = false);
 	void addEmpty(string strName);
@@ -44,6 +40,12 @@ public:
 	void play();
 	void next();
 	void stop();
+
+public:
+	inline float getNowTime() const
+	{
+		return _NowTime;
+	}
 
 private:
 	void gotoNextVideo();
@@ -58,7 +60,7 @@ private:
 	bool					_bNeedBackground;
 	ofVideoPlayer			_BackgroundVideo;
 	
-	float					_VideoTimer;
+	float					_VideoTimer, _NowTime;
 
 ////////////////////////////
 //Event
@@ -66,15 +68,6 @@ private:
 public:
 	static ofEvent<string>	VideoEvent;
 
-////////////////////////////
-//Subtitles
-////////////////////////////
-private:
-	void loadSubtitle();
-private:
-	bool					_bLoadSubtitle;
-	ofPtr<TimeSubtitleMgr>	_pSubtitleMgr;
-	ofImage					_Plane;
 };
 
 

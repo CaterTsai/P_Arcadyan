@@ -5,9 +5,10 @@ void ArcadyanTheatre::setupTheatre()
 {
 	_Director.SetStageSize(ofGetWindowWidth(), ofGetWindowHeight());
 
+#pragma region Scenes
 	///////////////////////
 	//Scenes
-	///////////////////////
+	///////////////////////	
 	_Director.AddScenes(NAME_MANAGER::S_Open);
 	_Director.AddScenes(NAME_MANAGER::S_Gate);
 	_Director.AddScenes(NAME_MANAGER::S_MainScenes);
@@ -15,7 +16,9 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddScenes(NAME_MANAGER::S_Milestone);
 	_Director.AddScenes(NAME_MANAGER::S_Product);
 	_Director.AddScenes(NAME_MANAGER::S_TakePicture);
-	
+#pragma endregion
+
+#pragma region Actor
 	//////////////////////
 	//Actor
 	//////////////////////
@@ -33,7 +36,7 @@ void ArcadyanTheatre::setupTheatre()
 
 	//S_GreenBuilding
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingTips, "videos/tips/GreenBuildingTips.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingLight, "videos/Greenbuilding_light.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingLight, "videos/Greenbuilding_light.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingZoomIn, "videos/Greenbuilding_zoomin.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingShowBuidling, "videos/Greenbuilding_show.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
 
@@ -57,7 +60,9 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddActor(new ofxWebcamActor(NAME_MANAGER::A_WEBCAM, 0, 60,  WEBCAM_WIDTH, WEBCAM_HEIGHT));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PhotoFrame, eBLEND_ALPHA));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_Photo));
+#pragma endregion
 
+#pragma region Plane
 	///////////////////////
 	//Plane
 	//////////////////////
@@ -88,7 +93,9 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddPlane(NAME_MANAGER::S_TakePicture, NAME_MANAGER::P_TakePictureBG, 0);
 	_Director.AddPlane(NAME_MANAGER::S_TakePicture, NAME_MANAGER::P_TakePictureTips, 1);
 	_Director.AddPlane(NAME_MANAGER::S_TakePicture, NAME_MANAGER::P_TakePictureUI, 2, ofPoint(0), WINDOW_WIDTH, WINDOW_HEIGHT, false);
-	
+#pragma endregion
+
+#pragma region Element
 	///////////////////////
 	//Elemect
 	///////////////////////
@@ -140,8 +147,9 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddElement(NAME_MANAGER::E_TakePictureCountdown, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureCountdown, 4, ofPoint(910, 300), false);
 	_Director.AddElement(NAME_MANAGER::E_PhotoFrame, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PhotoFrame, 5, ofPoint(518, 142));
 	_Director.AddElement(NAME_MANAGER::E_Photo, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_Photo, 6, ofPoint(518, 142), false);
+#pragma endregion
 	
-
+#pragma region Element Setting
 	///////////////////////
 	//Element Setting
 	///////////////////////
@@ -214,6 +222,7 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, pAnimationElement_);
 	pAnimationElement_->SetSPF(1);
 	pAnimationElement_->SetEvent(true);
+#pragma endregion	
 
 	///////////////////////
 	//Setup each Scenes
@@ -356,9 +365,12 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 		this->TheatreAnimInit(NAME_MANAGER::S_GreenBuilding);
 		this->enableControlEvent(NAME_MANAGER::S_GreenBuilding);
 
-		ofxVideoElement*	pGreenBuildingLight_ = nullptr;
-		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingLight, pGreenBuildingLight_);
-		pGreenBuildingLight_->PlayVideo();
+		ofxVideoElement*	pVideoElement_ = nullptr;
+		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingLight, pVideoElement_);
+		pVideoElement_->PlayVideo();
+
+		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingTips, pVideoElement_);
+		pVideoElement_->StopVideo();
 	}
 	else if(e.strMessage == NAME_MANAGER::E_GreenBuildingZoomIn)
 	{
@@ -368,12 +380,15 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 
 		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingZoomIn, pVideoElement_);
 		pVideoElement_->StopVideo();
+
+		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingLight, pVideoElement_);
+		pVideoElement_->StopVideo();
 	}
 	else if(e.strMessage == NAME_MANAGER::E_GreenBuildingShowBuilding)
 	{
-		ofxVideoElement*	pVideoElement_ = nullptr;
-		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingShowBuilding, pVideoElement_);
-		pVideoElement_->StopVideo();
+		//ofxVideoElement*	pVideoElement_ = nullptr;
+		//_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingShowBuilding, pVideoElement_);
+		//pVideoElement_->StopVideo();
 
 		string strEventMsg_ = NAME_MANAGER::T_Greenbuilding_Show;
 		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);

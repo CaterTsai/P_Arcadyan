@@ -6,12 +6,14 @@
 #include "ArcadyanTheatre.h"
 #include "NameManager.h"
 #include "InfoDisplay.h"
-//#include "TextSlider.h"
 #include "TextCurveSlider.h"
 #include "ImageSlider.h"
 #include "VerticalImageSlider.h"
 #include "GreenbuildingCtrl.h"
 #include "KinectCtrl.h"
+#include "TimelineTrigger.h"
+#include "SubtitleCreater.h"
+#include "AudioMgr.h"
 
 class Arcadyan : public ofBaseApp{
 
@@ -44,10 +46,23 @@ public:
 //Kinect
 //-------------------------------------------------
 public:
+	void OnGestureEvent(GestureEventArgs &e);
+public:
 	KinectCtrl	_KinectCtrl;
 
 //-------------------------------------------------
-//Video with subtitles
+//Timeline Subtitle
+//-------------------------------------------------
+public:
+	void InitialSubtitle(string strFilename);
+	void resetSubtitle();
+private:
+	SubtitleCreater		_SubtitleCreater;
+	TimelineTrigger		_SubtitleMgr;
+	ofImage				_backplane;
+	bool				_bFollowVideo;
+//-------------------------------------------------
+//Video manager
 //-------------------------------------------------
 public:
 	void InitialVideoManager();
@@ -67,23 +82,6 @@ private:
 	float			_fImgRotateY;
 
 //-------------------------------------------------
-//Info Display
-//-------------------------------------------------
-private:
-	void onInfoDisplay(bool& e);
-
-private:
-	InfoDisplay		_InfoDisplay;
-
-//-------------------------------------------------
-//Green Buidling Ctrl
-//-------------------------------------------------
-private:
-	bool				_bStartMove;
-	float				_fX;
-	GreenBuildingCtrl	_GreenBuildingCtrl;
-
-//-------------------------------------------------
 //Text Curve Slider
 //-------------------------------------------------
 public:
@@ -100,4 +98,26 @@ public:
 	void takePicture();
 private:
 	VirticalSlider	_PhotoFrameSlider;
+
+//-------------------------------------------------
+//Info Display
+//-------------------------------------------------
+private:
+	void onInfoDisplay(bool& e);
+
+private:
+	InfoDisplay		_InfoDisplay;
+
+//-------------------------------------------------
+//Green Buidling Ctrl
+//-------------------------------------------------
+private:
+	bool				_bStartMove;
+	GreenBuildingCtrl	_GreenBuildingCtrl;
+
+//-------------------------------------------------
+//Audio & BGM
+//-------------------------------------------------
+private:
+	void setupAudioMgr();
 };

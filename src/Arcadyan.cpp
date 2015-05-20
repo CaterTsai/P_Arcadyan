@@ -1,5 +1,6 @@
 #include "Arcadyan.h"
 
+#pragma region Base Method
 //--------------------------------------------------------------
 void Arcadyan::setup()
 {
@@ -8,6 +9,9 @@ void Arcadyan::setup()
 
 	//Video Manager
 	this->InitialVideoManager();
+
+	//Timeline Subtitle
+	this->InitialSubtitle("xml/_SubtitleData.xml");
 
 	//Image Slider
 	this->InitialImageSlider();
@@ -29,14 +33,19 @@ void Arcadyan::setup()
 
 	//Kinect Ctrl
 	//_KinectCtrl.setupKinectCtrl();
+	//ofAddListener(GestureEventArgs::_event, this, &Arcadyan::OnGestureEvent);
 
 	//Info Display
 	_InfoDisplay.setupInfoDisplay();
 	_InfoDisplay.getNowWeatherInfo();
 	ofAddListener(_InfoDisplay.FinishEvent, this, &Arcadyan::onInfoDisplay);
 
-	_VideoMgr.play();
+	//Audio & BGM
+	this->setupAudioMgr();
+	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
 
+	_VideoMgr.play();
+	_SubtitleMgr.start();
 	//Timer
 	_fMainTimer = ofGetElapsedTimef();
 
@@ -51,8 +60,8 @@ void Arcadyan::update()
 	_fMainTimer += fDelta_;
 
 	//Update KinectCtrl and get ctrl poss
-	//_KinectCtrl.updateKinectCtrl();
-	
+	_KinectCtrl.updateKinectCtrl();
+
 	ofPoint CtrlPos_;
 	if(!_KinectCtrl.getCtrlPos(CtrlPos_))
 	{
@@ -92,8 +101,21 @@ void Arcadyan::update()
 		_PhotoFrameSlider.updateVirticalSlider(fDelta_);
 	}
 
+	//Update Timeline Subtitle
+	if(_bFollowVideo)
+	{
+		_SubtitleMgr.updateInTime(fDelta_, _VideoMgr.getNowTime());
+	}
+	else
+	{
+		_SubtitleMgr.update(fDelta_);
+	}
+
 	//Theatre
 	_Arcadyan.updateTheatre(fDelta_, CtrlPos_);
+
+	//Audio & BGM
+	AudioMgr::GetInstance()->update();
 
 	//Show FPS
 	ofSetWindowTitle(ofToString(ofGetFrameRate()));
@@ -106,13 +128,13 @@ void Arcadyan::draw()
 	_Arcadyan.drawTheatre();
 	this->drawAfterTheatre();
 
-	//_KinectCtrl.drawKinectCtrl();
+	_KinectCtrl.drawKinectCtrl();
 }
 
 //--------------------------------------------------------------
 void Arcadyan::exit()
 {
-	//_KinectCtrl.exitKinectCtrl();
+	_KinectCtrl.exitKinectCtrl();
 }
 
 //--------------------------------------------------------------
@@ -132,6 +154,9 @@ void Arcadyan::keyPressed(int key)
 	case 'n':
 		{
 			_VideoMgr.next();
+
+			//BGM change
+			AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_INTRO);
 
 			ofxVideoElement*	pVideoElement_;
 			_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
@@ -212,7 +237,9 @@ void Arcadyan::mousePressed( int x, int y, int button )
 void Arcadyan::mouseReleased(int x, int y, int button )
 {
 }
+#pragma endregion
 
+#pragma region Theatre
 //--------------------------------------------------------------
 void Arcadyan::drawBeforeTheatre()
 {
@@ -255,6 +282,8 @@ void Arcadyan::drawAfterTheatre()
 	{
 		_PhotoFrameSlider.drawVirticalSlider(448, 703);
 	}
+
+	_SubtitleMgr.draw();
 }
 
 //--------------------------------------------------------------
@@ -266,7 +295,6 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 	}
 	else if(e == NAME_MANAGER::T_Greenbuilding_Show)
 	{
-		_fX = ofGetMouseX();
 		_GreenBuildingCtrl.startGreenBuidling();
 	}
 	else if(e == NAME_MANAGER::T_PlayMilestone)
@@ -309,6 +337,9 @@ void Arcadyan::resetTheatre()
 	//Video Manager
 	_VideoMgr.stop();
 
+	//Subtitle
+	_SubtitleMgr.reset();
+
 	//Image Slider
 	_ImgSlider.StopSlider();
 
@@ -318,8 +349,7 @@ void Arcadyan::resetTheatre()
 	//Green Bilding
 	_GreenBuildingCtrl.stopGreenBuidling();
 
-	//Milstion
-	
+	//Milstion	
 
 	//Photo Frame Slider
 	_PhotoFrameSlider.resetVirticalSlider();
@@ -330,17 +360,95 @@ void Arcadyan::resetTheatre()
 	//Start
 	_VideoMgr.play();
 }
+#pragma endregion
 
+#pragma region Kinect
+void Arcadyan::OnGestureEvent(GestureEventArgs &e)
+{
+	if(e._strGesutreName == NAME_MANAGER::G_WAVE_RIGHT)
+	{
+		_VideoMgr.next();
+
+		ofxVideoElement*	pVideoElement_;
+		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
+		pVideoElement_->StopVideo();
+
+		_KinectCtrl.stopGesutreCheck();
+
+		AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_INTRO);
+	}
+	else if(e._strGesutreName == NAME_MANAGER::G_OPEN)
+	{
+		_Arcadyan.OpenTheGate();
+
+		ofxVideoElement*	pVideoElement_;
+		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_GateOpenTips, pVideoElement_);
+		pVideoElement_->StopVideo();
+
+		_KinectCtrl.stopGesutreCheck();
+	}
+}
+#pragma endregion
+
+#pragma region Timeline Subtitle
+//--------------------------------------------------------------
+void Arcadyan::InitialSubtitle(string strFilename)
+{
+	_backplane.loadImage("images/backplane.png");
+	_SubtitleCreater.setSubtitleColor(ofColor(255));
+	_SubtitleCreater.setSubtitleFont("fonts/msjhbd.ttf", SUBTITLE_FONT_SIZE);
+
+	ofxXmlSettings	xml_;
+	if(!xml_.loadFile(strFilename))
+	{
+		ofLog(OF_LOG_ERROR, "[Timeline]Load timeline slider failed");
+		return;
+	}
+
+	//Subtitle - TEXT
+	int iTextNum_ = xml_.getNumTags("SUBTITLE_TEXT");
+	for(int idx_ = 0; idx_ < iTextNum_; ++idx_)
+	{
+		string strSubtitle_ = xml_.getValue("SUBTITLE_TEXT:TEXT", "", idx_);
+		float fTrigger_ = xml_.getValue("SUBTITLE_TEXT:TRIGGER", 0.0, idx_);
+		float fLength_ = xml_.getValue("SUBTITLE_TEXT:LENGTH", 0.0, idx_);
+
+		ofImage Img_;
+		_SubtitleCreater.Subtitle2Image(strSubtitle_, Img_, _backplane);
+		_SubtitleMgr.addElement(ofPtr<ImageTimelineElement>(new ImageTimelineElement(Img_, ofVec2f(WINDOW_WIDTH/2, WINDOW_HEIGHT - Img_.height - 50), fTrigger_, fLength_)));
+	}
+
+	//Subtitle - AUDIO
+	//int iAudioNum_ = xml_.getNumTags("SUBTITLE_AUDIO");
+	//for(int idx_ = 0; idx_ < iAudioNum_; ++idx_)
+	//{
+	//	string strSubtitle_ = xml_.getValue("SUBTITLE_AUDIO:FILE_NAME", "", idx_);
+	//	float fTrigger_ = xml_.getValue("SUBTITLE_AUDIO:TRIGGER", 0.0, idx_);
+
+	//	ofSoundPlayer Audio_;
+	//	Audio_.loadSound("audios" + strSubtitle_);
+	//	_SubtitleMgr.addElement(ofPtr<AudioTimelineElement>(new AudioTimelineElement(Audio_, fTrigger_)));
+	//}
+}
+
+//--------------------------------------------------------------
+void Arcadyan::resetSubtitle()
+{
+	_SubtitleMgr.reset();
+	_bFollowVideo = true;
+}
+
+#pragma endregion
+
+#pragma region Video Manager
 //--------------------------------------------------------------
 void Arcadyan::InitialVideoManager()
 {
-	_VideoMgr.setupVideoManager();
-	
 	//_VideoMgr.addVideo("videos/intro_in.mov", "V_IntroIn", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false);
 	//_VideoMgr.addVideo("videos/intro_loop.mov", "V_IntroLoop", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false, true, true);
 	//_VideoMgr.addVideo("videos/intro_out.mov", "V_IntroOut", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false);
 	
-	_VideoMgr.addVideoWithSourcePlayer("videos/intro_in.mov", "V_IntroIn");
+	//_VideoMgr.addVideoWithSourcePlayer("videos/intro_in.mov", "V_IntroIn");
 	_VideoMgr.addVideoWithSourcePlayer("videos/intro_loop.mov", "V_IntroLoop", true, true);
 	_VideoMgr.addVideoWithSourcePlayer("videos/intro_out.mov", "V_IntroOut");
 
@@ -366,20 +474,34 @@ void Arcadyan::onVideoEvent(string& e)
 		ofxVideoElement*	pVideoElement_;
 		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_GateOpenTips, pVideoElement_);
 		pVideoElement_->PlayVideo();
+
+		_bFollowVideo = false;
+
+		//Play BGM
+		AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_MAIN);
+
+		//Kinect gesture check
+		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_OPEN);
 	}
 	else if(e == "V_IntroLoop")
 	{
 		ofxVideoElement*	pVideoElement_;
 		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
 		pVideoElement_->PlayVideo();
+
+		//Kinect gesture check
+		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_WAVE_RIGHT);
 	}
 	else if(e == "V_SliderLoop")
 	{
 		_ImgSlider.StartSlider();
 	}
 }
+#pragma endregion
 
+#pragma region Slider
 //--------------------------------------------------------------
+//Image Slider
 void Arcadyan::InitialImageSlider()
 {
 	_fImgRotateX = 0.0;
@@ -388,12 +510,7 @@ void Arcadyan::InitialImageSlider()
 }
 
 //--------------------------------------------------------------
-void Arcadyan::onInfoDisplay(bool& e)
-{
-	_Arcadyan._Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
-}
-
-//--------------------------------------------------------------
+//Text Curve Slider
 void Arcadyan::InitialTextSlider()
 {
 	_TextCurveSlider.setupContanct();
@@ -421,6 +538,7 @@ void Arcadyan::onTextSlider(bool& e)
 }
 
 //--------------------------------------------------------------
+//Photo Frame Slider
 void Arcadyan::takePicture()
 {
 	ofImage PhotoFrame_, Photo_, MixResult_;
@@ -469,3 +587,22 @@ void Arcadyan::takePicture()
 	string strPhotoName_ = ofGetTimestampString("photos/%Y%m%d_%H%M.jpg");
 	MixResult_.saveImage(strPhotoName_);
 }
+#pragma endregion
+
+#pragma region Info display
+//--------------------------------------------------------------
+void Arcadyan::onInfoDisplay(bool& e)
+{
+	_Arcadyan._Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
+}
+#pragma endregion
+
+#pragma region Audio & BGM
+//--------------------------------------------------------------
+void Arcadyan::setupAudioMgr()
+{
+	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_OPEN, "audios/bgm_open.mp3");
+	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_INTRO, "audios/bgm_intro.mp3");
+	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_MAIN, "audios/bgm_main.mp3");
+}
+#pragma endregion
