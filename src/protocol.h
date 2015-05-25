@@ -32,4 +32,6 @@ const float BASE_CHECK_TIME = 0.15;
 const float SUCCESS_CHECK_TIMER = 0.08;
 const int PAUSE_COUNTER_LIMT = 20;
 
+const float cGREEN_BUILDING_EXIT_TIME = 1.5;
+
 #endif // !_ARCADYAN_PROTOCOL_

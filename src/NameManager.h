@@ -37,7 +37,6 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_GreenBuildingTips);
 	CREATE_VALUE(A_GreenBuildingLight);
 	CREATE_VALUE(A_GreenBuildingZoomIn);
-	CREATE_VALUE(A_GreenBuildingShowBuidling);
 	CREATE_VALUE(A_MilestoneTips);
 	CREATE_VALUE(A_MilestoneBlackGlass);
 	CREATE_VALUE(A_MilestoneCountdown);
@@ -53,6 +52,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_WEBCAM);
 	CREATE_VALUE(A_PhotoFrame);
 	CREATE_VALUE(A_Photo);
+	CREATE_VALUE(A_Ending);
 
 ///////////////////////////////////////
 // Plane
@@ -72,6 +72,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(P_TakePictureBG);
 	CREATE_VALUE(P_TakePictureTips);
 	CREATE_VALUE(P_TakePictureUI);
+	CREATE_VALUE(P_TakePictureEnding);
 	
 ///////////////////////////////////////
 // Element
@@ -87,7 +88,6 @@ namespace NAME_MANAGER
 	CREATE_VALUE(E_GreenBuildingLight);
 	CREATE_VALUE(E_GreenBuildingTips);
 	CREATE_VALUE(E_GreenBuildingZoomIn);
-	CREATE_VALUE(E_GreenBuildingShowBuilding);
 	CREATE_VALUE(E_MilestoneBG);
 	CREATE_VALUE(E_MilestoneGlass);
 	CREATE_VALUE(E_MilestoneBlackGlass);
@@ -109,11 +109,13 @@ namespace NAME_MANAGER
 	CREATE_VALUE(E_WEBCAM);
 	CREATE_VALUE(E_PhotoFrame);
 	CREATE_VALUE(E_Photo);
+	CREATE_VALUE(E_Ending);
 
 ///////////////////////////////////////
 // Animation Init
 //////////////////////////////////////
 	CREATE_VALUE(INIT_PhotoFrameChange);
+	CREATE_VALUE(INIT_Ending);
 
 ///////////////////////////////////////
 // Animation
@@ -125,6 +127,10 @@ namespace NAME_MANAGER
 	CREATE_VALUE(ANIM_TakePictureFadeIn);
 	CREATE_VALUE(ANIM_PhotoFrameFadeOut);
 	CREATE_VALUE(ANIM_PhotoFrameFadeIn);
+	CREATE_VALUE(ANIM_EndingWaiting);
+	CREATE_VALUE(ANIM_TakePictureUIFadeOut);
+	CREATE_VALUE(ANIM_TakePictureBGFadeOut);
+	CREATE_VALUE(ANIM_EndingFadeIn);
 
 ///////////////////////////////////////
 // Outside trigger
@@ -135,11 +141,13 @@ namespace NAME_MANAGER
 	CREATE_VALUE(T_TakePictureIsReady);
 	CREATE_VALUE(T_ChangePhotoFrame);
 	CREATE_VALUE(T_TakePhoto);
+	CREATE_VALUE(T_Ending);
 
 ///////////////////////////////////////
 // Control Event
 //////////////////////////////////////
 	CREATE_VALUE(C_GreenBuilding);
+	CREATE_VALUE(C_GreenBuildingNext);
 	CREATE_VALUE(C_Milestone);
 	CREATE_VALUE(C_Product);
 

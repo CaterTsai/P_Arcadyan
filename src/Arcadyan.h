@@ -14,6 +14,7 @@
 #include "TimelineTrigger.h"
 #include "SubtitleCreater.h"
 #include "AudioMgr.h"
+#include "ControlEvent.h"
 
 class Arcadyan : public ofBaseApp{
 
@@ -49,6 +50,23 @@ public:
 	void OnGestureEvent(GestureEventArgs &e);
 public:
 	KinectCtrl	_KinectCtrl;
+
+//-------------------------------
+// Control Event
+//-------------------------------
+public:
+	void onControlEvent(string& e);
+
+private:
+	void setupControlEvent();
+	void updateControlEvent(ofPoint CtrlPos);
+	void drawControlEvent();
+	void resetControlEvent();
+	void enableControlEvent(string strScenceName);
+	void disableControlEvent(string strScenceName);
+
+private:
+	map<string, shared_ptr<BaseControlEvent>>	_CtrlEventMgr;
 
 //-------------------------------------------------
 //Timeline Subtitle
@@ -111,6 +129,9 @@ private:
 //-------------------------------------------------
 //Green Buidling Ctrl
 //-------------------------------------------------
+public:
+	void onGreenBuildingExit(bool& e);
+
 private:
 	bool				_bStartMove;
 	GreenBuildingCtrl	_GreenBuildingCtrl;

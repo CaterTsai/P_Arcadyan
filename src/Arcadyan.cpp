@@ -19,6 +19,7 @@ void Arcadyan::setup()
 	//GB Ctrl
 	_bStartMove = false;
 	_GreenBuildingCtrl.setupGreenBuildingCtrl();
+	ofAddListener(_GreenBuildingCtrl._GreenBuildingEvent, this, &Arcadyan::onGreenBuildingExit);
 
 	//Text Slider
 	this->InitialTextSlider();
@@ -170,8 +171,10 @@ void Arcadyan::keyPressed(int key)
 			_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, pCountdown_);
 			pCountdown_->PlayAnimation();
 			pCountdown_->SetVisible(true);
+
 			//Stop photo frame slider
 			_PhotoFrameSlider.setCanMove(false);
+			_PhotoFrameSlider.setDisplay(false);
 		}
 		break;
 	case 't':
@@ -359,6 +362,9 @@ void Arcadyan::resetTheatre()
 
 	//Start
 	_VideoMgr.play();
+
+	//Change BGM
+	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
 }
 #pragma endregion
 
@@ -596,6 +602,20 @@ void Arcadyan::onInfoDisplay(bool& e)
 	_Arcadyan._Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
 }
 #pragma endregion
+
+#pragma region Green Building Ctrl
+//--------------------------------------------------------------
+void Arcadyan::onGreenBuildingExit(bool& e)
+{
+	if(_Arcadyan._Director.GetNowScenes()->GetScenesName() == NAME_MANAGER::S_GreenBuilding)
+	{
+		_Arcadyan._Director.TransitTo(eTransitionsType::eTRANSITION_FADE);
+		_GreenBuildingCtrl.stopGreenBuidling();
+		_Arcadyan.playCityLoop();
+	}
+}
+#pragma endregion
+
 
 #pragma region Audio & BGM
 //--------------------------------------------------------------
