@@ -34,4 +34,7 @@ const int PAUSE_COUNTER_LIMT = 20;
 
 const float cGREEN_BUILDING_EXIT_TIME = 1.5;
 
+const float cKINECT_BODY_WIDTH = 205;
+const float cKINECT_BODY_HEIGHT = 170;
+
 #endif // !_ARCADYAN_PROTOCOL_

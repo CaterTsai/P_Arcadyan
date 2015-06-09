@@ -32,7 +32,7 @@ typedef struct _stTEXT_CURVE_ELEMENT
 		fAnimAlpha.update(fDelta);
 		fAlpha = cBASE_ALPHA + fAnimAlpha.getCurrentValue();
 
-		if(fAlpha == cBASE_ALPHA && fAnimDuraction.getCurrentValue() > 0.7)
+		if(fAlpha == cBASE_ALPHA && fAnimDuraction.getCurrentValue() > 0.6)
 		{
 			fAnimAlpha.animateFromTo(0, 255 - cBASE_ALPHA);
 		}
@@ -159,8 +159,5 @@ public:
 
 };
 #pragma endregion
-
-
-
 
 #endif // !TEXT_CURVES_SLIDER

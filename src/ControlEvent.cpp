@@ -3,6 +3,12 @@
 //------------------------
 //@CLASS TouchControlEvent
 //------------------------
+TouchControlEvent::TouchControlEvent(string strEventName):
+	BaseControlEvent(strEventName),
+	_bIsSetup(false)
+{}
+
+//--------------------------------------------------------------
 TouchControlEvent::TouchControlEvent(ofImage& CtrlImg, string strEventName):
 	BaseControlEvent(CtrlImg, strEventName),
 	_bIsSetup(false)
@@ -44,7 +50,11 @@ void TouchControlEvent::drawControlEvent()
 	{
 		_TargetImg.draw(_TargetArea);
 	}
-	_CtrlImg.draw(_CtrlPos.x - _CtrlImg.width/2, _CtrlPos.y - _CtrlImg.height/2);
+
+	if(_bHaveCtrlDisplay)
+	{
+		_CtrlImg.draw(_CtrlPos.x - _CtrlImg.width/2, _CtrlPos.y - _CtrlImg.height/2);
+	}
 
 	ofPopStyle();
 }
@@ -74,12 +84,18 @@ void TouchControlEvent::setupTouchTarget(ofRectangle TargetArea)
 //------------------------
 //@CLASS DragControlEvent
 //------------------------
+DragControlEvent::DragControlEvent(string strEventName):
+	BaseControlEvent(strEventName),
+	_bIsSetup(false),
+	_bIsTouch(false)
+{}
+
+//--------------------------------------------------------------
 DragControlEvent::DragControlEvent(ofImage& CtrlImg, string strEventName):
 	BaseControlEvent(CtrlImg, strEventName),
 	_bIsSetup(false),
 	_bIsTouch(false)
-{
-}
+{}
 
 //--------------------------------------------------------------
 void DragControlEvent::updateControlEvent(ofPoint CtrlPos)
@@ -133,8 +149,10 @@ void DragControlEvent::drawControlEvent()
 	ofSetColor(255);
 	
 	_TouchImg.draw(_TouchArea);
-	_CtrlImg.draw(_CtrlPos.x - _CtrlImg.width/2, _CtrlPos.y - _CtrlImg.height/2);
-
+	if(_bHaveCtrlDisplay)
+	{
+		_CtrlImg.draw(_CtrlPos.x - _CtrlImg.width/2, _CtrlPos.y - _CtrlImg.height/2);
+	}
 	ofPopStyle();
 }
 

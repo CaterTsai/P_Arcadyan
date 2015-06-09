@@ -46,6 +46,7 @@ void ImageTimelineElement::draw()
 	}
 
 	ofPushStyle();
+	ofEnableAlphaBlending();
 	ofSetColor(255, _AnimAlpha.getCurrentValue());
 	{
 		ofPushMatrix();

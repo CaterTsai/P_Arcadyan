@@ -6,14 +6,16 @@ void TimelineTrigger::update(float fDelta)
 	{
 		return;
 	}
-
+	
 	_fMainTimer += fDelta;
+	
 	for(auto& Iter_ : _TimelineList)
 	{	
 		Iter_->update(fDelta);
 
-		if(abs(Iter_->getTriggerT() - _fMainTimer) < 0.05)
+		if(_fMainTimer > Iter_->getTriggerT() && (_fMainTimer - Iter_->getTriggerT()) < 0.05)
 		{
+			
 			//Close enough
 			Iter_->start();
 		}

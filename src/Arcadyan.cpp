@@ -6,7 +6,7 @@ void Arcadyan::setup()
 {
 	ofBackground(255);
 	ofSetVerticalSync(true);
-
+	
 	//Video Manager
 	this->InitialVideoManager();
 
@@ -27,14 +27,17 @@ void Arcadyan::setup()
 
 	//Photo Frame Slider
 	_PhotoFrameSlider.setupVirticalSlider(ofRectangle(0, 0, 1024, 250), (cSMALL_PHOTO_WIDTH * cSMALL_PHOTO_SCALE) + 90);
-	
+	ofAddListener(_PhotoFrameSlider._VerticalSliderEvent, this, &Arcadyan::onPhotoFrameChange);
+
 	//Theatre
 	_Arcadyan.setupTheatre();
 	ofAddListener(_Arcadyan.ArcadyanTheaterEvent, this, &Arcadyan::onArcadyanTheaterEvent);
 
 	//Kinect Ctrl
-	//_KinectCtrl.setupKinectCtrl();
-	//ofAddListener(GestureEventArgs::_event, this, &Arcadyan::OnGestureEvent);
+	_KinectCtrl.setupKinectCtrl();
+	ofAddListener(GestureEventArgs::_event, this, &Arcadyan::OnGestureEvent);
+	_DisplayBody = true;
+	_bHaveUser = false;
 
 	//Info Display
 	_InfoDisplay.setupInfoDisplay();
@@ -50,8 +53,8 @@ void Arcadyan::setup()
 	//Timer
 	_fMainTimer = ofGetElapsedTimef();
 
-	//ofToggleFullscreen();
-	//ofHideCursor();
+	ofToggleFullscreen();
+	ofHideCursor();
 }
 
 //--------------------------------------------------------------
@@ -61,9 +64,24 @@ void Arcadyan::update()
 	_fMainTimer += fDelta_;
 
 	//Update KinectCtrl and get ctrl poss
-	_KinectCtrl.updateKinectCtrl();
-
-	ofPoint CtrlPos_;
+	if(_KinectCtrl.getSetup())
+	{
+		_KinectCtrl.updateKinectCtrl();
+		if(!_bHaveUser && _KinectCtrl.getHaveUser())
+		{
+			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadein);
+			_KinectCtrl.startGestureCheck(NAME_MANAGER::G_HAND_UP);
+			_KinectCtrl.startGestureCheck(NAME_MANAGER::G_WAVE_HAND);
+		}
+		else if(_bHaveUser && !_KinectCtrl.getHaveUser())
+		{
+			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadeout);
+			_KinectCtrl.stopGesutreCheck();
+		}
+		_bHaveUser = _KinectCtrl.getHaveUser();
+	}
+	
+	ofVec2f CtrlPos_;
 	if(!_KinectCtrl.getCtrlPos(CtrlPos_))
 	{
 		CtrlPos_.set(ofGetMouseX(), ofGetMouseY());
@@ -99,7 +117,7 @@ void Arcadyan::update()
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
-		_PhotoFrameSlider.updateVirticalSlider(fDelta_);
+		_PhotoFrameSlider.updateVirticalSlider(fDelta_, CtrlPos_);
 	}
 
 	//Update Timeline Subtitle
@@ -128,8 +146,6 @@ void Arcadyan::draw()
 	this->drawBeforeTheatre();
 	_Arcadyan.drawTheatre();
 	this->drawAfterTheatre();
-
-	_KinectCtrl.drawKinectCtrl();
 }
 
 //--------------------------------------------------------------
@@ -143,6 +159,11 @@ void Arcadyan::keyPressed(int key)
 {
 	switch(key)
 	{
+	case 'b':
+		{
+			_DisplayBody ^= true;
+			break;
+		}
 	case 'o':
 		{
 			_Arcadyan.OpenTheGate();
@@ -175,6 +196,7 @@ void Arcadyan::keyPressed(int key)
 			//Stop photo frame slider
 			_PhotoFrameSlider.setCanMove(false);
 			_PhotoFrameSlider.setDisplay(false);
+
 		}
 		break;
 	case 't':
@@ -201,8 +223,7 @@ void Arcadyan::keyPressed(int key)
 			if(_PhotoFrameSlider.toRight())
 			{
 				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
-			}
-			
+			}			
 		}
 		break;
 	case 'l':
@@ -228,6 +249,7 @@ void Arcadyan::keyPressed(int key)
 			this->resetTheatre();
 		}
 		break;
+
 	}
 }
 
@@ -254,9 +276,11 @@ void Arcadyan::drawBeforeTheatre()
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_MainScenes)
 	{
+
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_Milestone)
 	{
+
 	}
 }
 
@@ -268,6 +292,7 @@ void Arcadyan::drawAfterTheatre()
 	if(strScenesName_ == NAME_MANAGER::S_Open)
 	{
 		_ImgSlider.DrawImageSlider(_fImgRotateX, _fImgRotateY);
+
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_MainScenes)
 	{
@@ -276,10 +301,20 @@ void Arcadyan::drawAfterTheatre()
 	else if(strScenesName_ == NAME_MANAGER::S_GreenBuilding)
 	{
 		_GreenBuildingCtrl.drawGreenBuildingCtrl();
+
+		if(_DisplayBody)
+		{
+			_KinectCtrl.drawBody(ofPoint(0, WINDOW_HEIGHT - cKINECT_BODY_HEIGHT), cKINECT_BODY_WIDTH, cKINECT_BODY_HEIGHT);
+		}
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_Milestone)
 	{
 		_TextCurveSlider.drawCurveSlider();
+
+		if(_DisplayBody)
+		{
+			_KinectCtrl.drawBody(ofPoint(0, WINDOW_HEIGHT - cKINECT_BODY_HEIGHT), cKINECT_BODY_WIDTH, cKINECT_BODY_HEIGHT);
+		}
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
@@ -294,7 +329,7 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 {
 	if(e == NAME_MANAGER::T_DoorIsOpen)
 	{
-		_InfoDisplay.startDisplay(3);
+		_InfoDisplay.startDisplay(1.5);
 	}
 	else if(e == NAME_MANAGER::T_Greenbuilding_Show)
 	{
@@ -303,6 +338,8 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 	else if(e == NAME_MANAGER::T_PlayMilestone)
 	{
 		_TextCurveSlider.startCurveSlider();
+
+		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_HAND_UP);
 	}
 	else if(e == NAME_MANAGER::T_TakePictureIsReady)
 	{
@@ -328,6 +365,14 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 	{
 		this->takePicture();
 	}
+	else if(e == NAME_MANAGER::T_StartEnding)
+	{
+		
+	}
+	else if(e == NAME_MANAGER::T_Ending)
+	{
+		this->resetTheatre();
+	}
 	else
 	{
 		ofLog(OF_LOG_WARNING, "Unknow event from ArcadyanTheater");
@@ -341,7 +386,7 @@ void Arcadyan::resetTheatre()
 	_VideoMgr.stop();
 
 	//Subtitle
-	_SubtitleMgr.reset();
+	this->resetSubtitle();
 
 	//Image Slider
 	_ImgSlider.StopSlider();
@@ -365,19 +410,23 @@ void Arcadyan::resetTheatre()
 
 	//Change BGM
 	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
+
+	_bHaveUser = false;
 }
 #pragma endregion
 
 #pragma region Kinect
 void Arcadyan::OnGestureEvent(GestureEventArgs &e)
 {
-	if(e._strGesutreName == NAME_MANAGER::G_WAVE_RIGHT)
+	if(e._strGesutreName == NAME_MANAGER::G_WAVE_HAND)
 	{
 		_VideoMgr.next();
 
 		ofxVideoElement*	pVideoElement_;
 		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
 		pVideoElement_->StopVideo();
+
+		_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadeout);
 
 		_KinectCtrl.stopGesutreCheck();
 
@@ -393,6 +442,19 @@ void Arcadyan::OnGestureEvent(GestureEventArgs &e)
 
 		_KinectCtrl.stopGesutreCheck();
 	}
+	else if(e._strGesutreName == NAME_MANAGER::G_HAND_UP)
+	{
+		_TextCurveSlider.RotateToForward();
+		_KinectCtrl.stopGesutreCheck();
+		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_HAND_DOWN);
+	}
+	else if(e._strGesutreName == NAME_MANAGER::G_HAND_DOWN)
+	{
+		_TextCurveSlider.RotateToBackward();
+		_KinectCtrl.stopGesutreCheck();
+		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_HAND_UP);
+	}
+	
 }
 #pragma endregion
 
@@ -400,10 +462,10 @@ void Arcadyan::OnGestureEvent(GestureEventArgs &e)
 //--------------------------------------------------------------
 void Arcadyan::InitialSubtitle(string strFilename)
 {
-	_backplane.loadImage("images/backplane.png");
+	_backplane.loadImage("images/backplane2.png");
 	_SubtitleCreater.setSubtitleColor(ofColor(255));
 	_SubtitleCreater.setSubtitleFont("fonts/msjhbd.ttf", SUBTITLE_FONT_SIZE);
-
+	_bFollowVideo = true;
 	ofxXmlSettings	xml_;
 	if(!xml_.loadFile(strFilename))
 	{
@@ -442,6 +504,7 @@ void Arcadyan::resetSubtitle()
 {
 	_SubtitleMgr.reset();
 	_bFollowVideo = true;
+	_SubtitleMgr.start();
 }
 
 #pragma endregion
@@ -450,12 +513,7 @@ void Arcadyan::resetSubtitle()
 //--------------------------------------------------------------
 void Arcadyan::InitialVideoManager()
 {
-	//_VideoMgr.addVideo("videos/intro_in.mov", "V_IntroIn", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false);
-	//_VideoMgr.addVideo("videos/intro_loop.mov", "V_IntroLoop", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false, true, true);
-	//_VideoMgr.addVideo("videos/intro_out.mov", "V_IntroOut", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), false);
-	
-	//_VideoMgr.addVideoWithSourcePlayer("videos/intro_in.mov", "V_IntroIn");
-	_VideoMgr.addVideoWithSourcePlayer("videos/intro_loop.mov", "V_IntroLoop", true, true);
+	_VideoMgr.addVideoWithSourcePlayer("videos/intro_loop.mov", "V_IntroLoop", true);
 	_VideoMgr.addVideoWithSourcePlayer("videos/intro_out.mov", "V_IntroOut");
 
 	_VideoMgr.addVideo("videos/Cloud_intro.mov", "V_FadeIn",ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), true);
@@ -491,12 +549,12 @@ void Arcadyan::onVideoEvent(string& e)
 	}
 	else if(e == "V_IntroLoop")
 	{
-		ofxVideoElement*	pVideoElement_;
-		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
-		pVideoElement_->PlayVideo();
+		//ofxVideoElement*	pVideoElement_;
+		//_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
+		//pVideoElement_->PlayVideo();
 
 		//Kinect gesture check
-		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_WAVE_RIGHT);
+
 	}
 	else if(e == "V_SliderLoop")
 	{
@@ -512,7 +570,7 @@ void Arcadyan::InitialImageSlider()
 {
 	_fImgRotateX = 0.0;
 	_fImgRotateY = 10.0;
-	_ImgSlider.SetupImageSlider("xml/_ImageSliderData.xml", ofPoint(750, ofGetHeight()/2, 0), ofPoint(0, 0, -1000), 1.0);
+	_ImgSlider.SetupImageSlider("xml/_ImageSliderData.xml", ofPoint(750, ofGetHeight()/2 + WINDOW_HEIGHT, 0), WINDOW_HEIGHT, 2.0);
 }
 
 //--------------------------------------------------------------
@@ -540,6 +598,8 @@ void Arcadyan::onTextSlider(bool& e)
 	//pMilestonLoop_->StopVideo();
 
 	//_Arcadyan.playCityLoop();
+	_KinectCtrl.stopGesutreCheck();
+
 	_Arcadyan._Director.TransitTo(TRANSITION_TYPE::eTRANSITION_FADE);
 }
 
@@ -567,7 +627,6 @@ void Arcadyan::takePicture()
 	{
 		ofPushStyle();
 		ofSetColor(255);
-		ofEnableAlphaBlending();
 		
 		ofPushMatrix();
 		{
@@ -590,8 +649,33 @@ void Arcadyan::takePicture()
 	pPhoto_->SetVisible(true);
 
 	//save the photo
-	string strPhotoName_ = ofGetTimestampString("photos/%Y%m%d_%H%M.jpg");
+	string strPhotoName_ = ofGetTimestampString("photos/%Y%m%d_%H%M.png");
 	MixResult_.saveImage(strPhotoName_);
+}
+
+//--------------------------------------------------------------
+void Arcadyan::onPhotoFrameChange(string& e)
+{
+	if(e == "toLeft")
+	{
+		_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
+	}
+	else if(e == "toRight")
+	{
+		_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
+	}
+	else if(e == "takePicture")
+	{
+		//Start take picture
+		ofxAnimationImageElement* pCountdown_;
+		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, pCountdown_);
+		pCountdown_->PlayAnimation();
+		pCountdown_->SetVisible(true);
+
+		//Stop photo frame slider
+		_PhotoFrameSlider.setCanMove(false);
+		_PhotoFrameSlider.setDisplay(false);
+	}
 }
 #pragma endregion
 
@@ -615,7 +699,6 @@ void Arcadyan::onGreenBuildingExit(bool& e)
 	}
 }
 #pragma endregion
-
 
 #pragma region Audio & BGM
 //--------------------------------------------------------------

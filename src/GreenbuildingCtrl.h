@@ -51,7 +51,6 @@ struct ImageSet
 		{
 			eState = eIMAGE_DISABLE;
 		}
-
 	}
 
 	//-------------------------------------
@@ -106,8 +105,9 @@ private:
 	void drawImage();
 
 private:
-	ofRectangle			_ImgSize;
 	ofPoint				_DrawPos;
+	ofRectangle			_ImgSize;
+	
 	vector<ImageSet>	_ImageList;
 
 ////////////////////////////

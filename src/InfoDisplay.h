@@ -36,7 +36,7 @@ enum eINFO_STATE
 class InfoDisplay
 {
 public:
-	void setupInfoDisplay(float fChangeTimeout = 5.0);
+	void setupInfoDisplay(float fChangeTimeout = 3.0);
 	void updateInfoDisplay(float fDelta = 0.0);
 	void drawInfoDisplay();
 

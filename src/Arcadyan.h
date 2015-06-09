@@ -49,7 +49,10 @@ public:
 public:
 	void OnGestureEvent(GestureEventArgs &e);
 public:
+	bool		_bHaveUser;
 	KinectCtrl	_KinectCtrl;
+
+	bool		_DisplayBody;
 
 //-------------------------------
 // Control Event
@@ -114,6 +117,8 @@ private:
 //-------------------------------------------------
 public:
 	void takePicture();
+	void onPhotoFrameChange(string& e);
+
 private:
 	VirticalSlider	_PhotoFrameSlider;
 

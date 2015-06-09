@@ -22,8 +22,19 @@ public:
 	void drawKinectCtrl();
 	void exitKinectCtrl();
 
-	bool getCtrlPos(ofVec2f refRightHandPos);
+	bool getCtrlPos(ofVec2f& refRightHandPos);
 	void drawBody(ofPoint Pos, int iWidth, int iHeight);
+
+public:
+	inline bool getSetup()
+	{
+		return _bIsSetup;
+	}
+
+	inline bool getHaveUser()
+	{
+		return _bHaveUser;
+	}
 
 private:
 	bool		_bIsSetup;

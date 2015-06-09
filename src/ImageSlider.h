@@ -23,8 +23,7 @@ typedef IMAGE_LIST::iterator		IMAGE_LIST_ITER;
 class ImageSlider
 {
 public:
-	void SetupImageSlider(string strXmlName, ofPoint oStartPos, ofVec3f oInterval, float fIntervalTime = 5.0);
-	void SetupImageSliderFromFolder(string strFolderName, ofPoint oStartPos, ofVec3f oInterval, float fIntervalTime = 5.0);
+	void SetupImageSlider(string strXmlName, ofPoint RotateAxle, float fLength, float fIntervalTime = 5.0);
 	
 	void UpdateImageSlider(float fDelta);
 	void DrawImageSlider(float fRotateX, float fRotateY);
@@ -36,29 +35,26 @@ public:
 	
 	bool getIsDisplay(){return _bDisplay;};
 	bool getIsEnd (){return _bIsEnd;};
-
-
+	
 	string ws2s(const wstring& wstr);
-
 
 private:
 	bool				_bDisplay;
 	bool				_bIsEnd;
 
 	bool				_bStartAnimation;
-	ofxAnimatableFloat	_fAnimationTimer;
-	ofxAnimatableFloat	_fAlpah;
-
+	ofxAnimatableFloat	_fAnimRotate;
 	ofxTrueTypeFontUC	_Font;
 
-	ofPoint			_StartPos;
-	ofPoint			_DrawStartPos;
-	ofVec3f			_Interval;
-
-	float			_IntervalTimeout;
-	float			_IntervalTimer;
+	ofPoint			_RotateAxle;
+	float			_fLength;
+	
+	int				_iDisplayIndex;
+	int				_iRotateIndex;
 
 	IMAGE_LIST		_ImageList;
+
+	float			_IntervalTimer, _IntervalTimeout;
 };
 
 

@@ -9,9 +9,19 @@
 class BaseControlEvent
 {
 public:
+	BaseControlEvent(string strEventName):
+		_bIsDisplay(false),
+		_bIsTrigger(false),
+		_bHaveCtrlDisplay(false),
+		_strEventName(strEventName)
+	{
+		_CtrlPos.set(0);
+	};
+
 	BaseControlEvent(ofImage& CtrlImg, string strEventName):
 		_bIsDisplay(false),
 		_bIsTrigger(false),
+		_bHaveCtrlDisplay(true),
 		_strEventName(strEventName)
 	{
 		_CtrlPos.set(0);
@@ -31,8 +41,10 @@ public:
 	ofEvent<string>	ControlEvent;
 
 protected:
+	const bool	_bHaveCtrlDisplay;
 	bool		_bIsTrigger;
 	bool		_bIsDisplay;
+	
 	ofPoint		_CtrlPos;
 	ofImage		_CtrlImg;
 	string		_strEventName;
@@ -44,6 +56,7 @@ protected:
 class TouchControlEvent : public BaseControlEvent
 {
 public:
+	TouchControlEvent(string strEventName);
 	TouchControlEvent(ofImage& CtrlImg, string strEventName);
 	void updateControlEvent(ofPoint CtrlPos) override;
 	void drawControlEvent() override;
@@ -66,6 +79,7 @@ private:
 class DragControlEvent : public BaseControlEvent
 {
 public:
+	DragControlEvent(string strEventName);
 	DragControlEvent(ofImage& CtrlImg, string strEventName);
 	void updateControlEvent(ofPoint CtrlPos) override;
 	void drawControlEvent() override;

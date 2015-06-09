@@ -66,6 +66,7 @@ void AudioMgr::playAudio(string strName)
 		ofLog(OF_LOG_WARNING, "[AudioMgr]Can't found this audio in map :" + strName);
 		return;
 	}
+	Iter_->second.setVolume(1.0);
 	Iter_->second.play();
 }
 

@@ -61,10 +61,13 @@ void VirticalSlider::setupVirticalSlider(ofRectangle DisplayArea, float fInterva
 	_bIsDisplay = false;
 	_bCanMove = true;
 	_ImgIndex = 1;
+
+
+	this->setupControl();
 }
 
 //--------------------------------------------------------------
-void VirticalSlider::updateVirticalSlider(float fDelta)
+void VirticalSlider::updateVirticalSlider(float fDelta, ofVec2f& CtrlPos)
 {
 	if(!_bIsDisplay || !_bCanMove)
 	{
@@ -128,6 +131,29 @@ void VirticalSlider::updateVirticalSlider(float fDelta)
 		this->updateDisplay();
 	}
 
+	//Control
+	_CtrlArea.position = CtrlPos;
+	if(_LeftArea.intersects(_CtrlArea))
+	{
+		if(this->toLeft())
+		{
+			string strMsg_ = "toLeft";
+			ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+		}
+	}
+	if(_RightArea.intersects(_CtrlArea))
+	{
+		if(this->toRight())
+		{
+			string strMsg_ = "toRight";
+			ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+		}
+	}
+	if(_CameraArea.intersects(_CtrlArea))
+	{
+		string strMsg_ = "takePicture";
+		ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+	}
 }
 
 //--------------------------------------------------------------
@@ -144,6 +170,8 @@ void VirticalSlider::drawVirticalSlider(int x, int y)
 	_Display.draw(x, y);
 
 	ofPopStyle();
+
+	this->drawControl();
 }
 
 //--------------------------------------------------------------
@@ -238,4 +266,38 @@ void VirticalSlider::updateDisplay()
 		ofPopStyle();
 	}
 	_Display.end();
+}
+
+//--------------------------------------------------------------
+void VirticalSlider::setupControl()
+{
+	_ArrowLeft.loadImage("images/ArrowLeft.png");
+	_ArrowRight.loadImage("images/ArrowRight.png");
+	_Camera.loadImage("images/camera.png");
+	_CtrlImg.loadImage("images/hand.png");
+
+	_CtrlArea.setFromCenter(ofPoint(0), _CtrlImg.width, _CtrlImg.height);
+	_LeftArea.setFromCenter(ofPoint(409, 823), _ArrowLeft.width, _ArrowLeft.height);
+	_RightArea.setFromCenter(ofPoint(1527, 823), _ArrowRight.width, _ArrowRight.height);
+	_CameraArea.setFromCenter(ofPoint(1635, 558), _Camera.width, _Camera.height);
+}
+
+//--------------------------------------------------------------
+void VirticalSlider::drawControl()
+{
+	ofPushStyle();
+	ofSetColor(255);
+	ofEnableAlphaBlending();
+	{
+		_ArrowLeft.draw(_LeftArea);
+		_ArrowRight.draw(_RightArea);
+
+		_Camera.draw(_CameraArea);
+
+		ofPushMatrix();
+		ofTranslate(_CtrlArea.position);
+			_CtrlImg.draw(-_CtrlImg.getWidth()/2, -_CtrlImg.getHeight()/2);
+		ofPopMatrix();
+	}
+	ofPopStyle();
 }

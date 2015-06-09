@@ -91,7 +91,7 @@ private:
 	void disableControlEvent(string strScenceName);
 
 private:
-	map<string, shared_ptr<BaseControlEvent>>	_CtrlEventMgr;
+	multimap<string, shared_ptr<BaseControlEvent>>	_CtrlEventMgr;
 
 ////////////////////////////
 //Event

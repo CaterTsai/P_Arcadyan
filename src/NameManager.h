@@ -29,6 +29,7 @@ namespace NAME_MANAGER
 //////////////////////////////////////
 
 	CREATE_VALUE(A_SwingHandTipsVideo);
+	CREATE_VALUE(A_SwingHandWordTips);
 	CREATE_VALUE(A_DoorImageBG);
 	CREATE_VALUE(A_MainScenesBG);
 	CREATE_VALUE(A_MainScenesGlass);
@@ -78,6 +79,7 @@ namespace NAME_MANAGER
 // Element
 //////////////////////////////////////
 	CREATE_VALUE(E_OpenTips);
+	CREATE_VALUE(E_OpenWordTips);
 	CREATE_VALUE(E_GateBG);
 	CREATE_VALUE(E_GateOpenVideo);
 	CREATE_VALUE(E_GateOpenTips)	
@@ -114,12 +116,17 @@ namespace NAME_MANAGER
 ///////////////////////////////////////
 // Animation Init
 //////////////////////////////////////
+	CREATE_VALUE(INIT_SwingTipsFadein);
+	CREATE_VALUE(INIT_SwingTipsFadeout);
 	CREATE_VALUE(INIT_PhotoFrameChange);
 	CREATE_VALUE(INIT_Ending);
 
 ///////////////////////////////////////
 // Animation
 //////////////////////////////////////
+	CREATE_VALUE(ANIM_SwingTipsFadeIn);
+	CREATE_VALUE(ANIM_SwingTipsFadeOut);
+
 	CREATE_VALUE(ANIM_GreenBuildingLightFadeIn);
 	CREATE_VALUE(ANIM_MilstoneZoomInFadeOut);
 	CREATE_VALUE(ANIM_TakePictureTipsFadeIn);
@@ -141,22 +148,23 @@ namespace NAME_MANAGER
 	CREATE_VALUE(T_TakePictureIsReady);
 	CREATE_VALUE(T_ChangePhotoFrame);
 	CREATE_VALUE(T_TakePhoto);
+	CREATE_VALUE(T_StartEnding);
 	CREATE_VALUE(T_Ending);
 
 ///////////////////////////////////////
 // Control Event
 //////////////////////////////////////
 	CREATE_VALUE(C_GreenBuilding);
-	CREATE_VALUE(C_GreenBuildingNext);
 	CREATE_VALUE(C_Milestone);
 	CREATE_VALUE(C_Product);
-
 
 //-------------------------------------------------
 //Gesture
 //-------------------------------------------------
-	CREATE_VALUE(G_WAVE_RIGHT);
+	CREATE_VALUE(G_WAVE_HAND);
 	CREATE_VALUE(G_OPEN);
+	CREATE_VALUE(G_HAND_UP);
+	CREATE_VALUE(G_HAND_DOWN);
 
 //-------------------------------------------------
 //Audio & BGM

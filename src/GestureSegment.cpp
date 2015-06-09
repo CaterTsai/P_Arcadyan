@@ -1,9 +1,9 @@
 #include "GestureSegment.h"
 
+#pragma region OPEN
 ///////////////////////////////////////
 //Gesture:Open
 ///////////////////////////////////////
-
 eGestureCheckResult	OpenSegment1::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
 {
 	if(stSkeleton.aJoints[JointType_HandRight].x > stSkeleton.aJoints[JointType_HandLeft].x)
@@ -70,7 +70,9 @@ eGestureCheckResult	OpenSegment3::CheckGesture(const stSCREEN_SKELETON& stSkelet
 		return eGesutreCheck_Fail;
 	}
 }
+#pragma endregion
 
+#pragma region Wave Right
 ///////////////////////////////////////
 //Gesture:Wave Right
 ///////////////////////////////////////
@@ -79,7 +81,7 @@ eGestureCheckResult	WaveRightSegment1::CheckGesture(const stSCREEN_SKELETON& stS
 	// Hand above elbow
 	if(stSkeleton.aJoints[JointType_HandRight].y < stSkeleton.aJoints[JointType_ElbowRight].y)
 	{
-		// Hand right of elbow
+		// right hand is right of right elbow || left hand is left of left elbow
 		if(stSkeleton.aJoints[JointType_HandRight].x > stSkeleton.aJoints[JointType_ElbowRight].x)
 		{
 			return eGesutreCheck_Success;
@@ -101,7 +103,7 @@ eGestureCheckResult	WaveRightSegment2::CheckGesture(const stSCREEN_SKELETON& stS
 	// Hand above elbow
 	if(stSkeleton.aJoints[JointType_HandRight].y < stSkeleton.aJoints[JointType_ElbowRight].y)
 	{
-		// Hand left of elbow
+		// right hand left of right elbow || left hand right of left elbow
 		if(stSkeleton.aJoints[JointType_HandRight].x < stSkeleton.aJoints[JointType_ElbowRight].x)
 		{
 			return eGesutreCheck_Success;
@@ -116,7 +118,9 @@ eGestureCheckResult	WaveRightSegment2::CheckGesture(const stSCREEN_SKELETON& stS
 		return eGesutreCheck_Fail;
 	}
 }
+#pragma endregion
 
+#pragma region Wave Left
 ///////////////////////////////////////
 //Gesture:Wave Left
 ///////////////////////////////////////
@@ -162,3 +166,132 @@ eGestureCheckResult	WaveLeftSegment2::CheckGesture(const stSCREEN_SKELETON& stSk
 		return eGesutreCheck_Fail;
 	}
 }
+#pragma endregion
+
+#pragma region Right Hand up
+///////////////////////////////////////
+//Gesture:Hand up
+///////////////////////////////////////
+eGestureCheckResult	RightHandUpSegment1::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand down Shoulder
+	if(stSkeleton.aJoints[JointType_HandRight].y > stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+
+//--------------------------------------------------------------
+eGestureCheckResult	RightHandUpSegment2::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand above Shoulder
+	if(stSkeleton.aJoints[JointType_HandRight].y < stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+#pragma endregion
+
+#pragma region Right Hand down
+///////////////////////////////////////
+//Gesture:Hand down
+///////////////////////////////////////
+eGestureCheckResult	RightHandDownSegment1::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand above Shoulder
+	if(stSkeleton.aJoints[JointType_HandRight].y < stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+
+//--------------------------------------------------------------
+eGestureCheckResult	RightHandDownSegment2::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand down Shoulder
+	if(stSkeleton.aJoints[JointType_HandRight].y > stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+#pragma endregion
+
+#pragma region Left Hand up
+///////////////////////////////////////
+//Gesture:Hand up
+///////////////////////////////////////
+eGestureCheckResult	LeftHandUpSegment1::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand down Shoulder
+	if(stSkeleton.aJoints[JointType_HandLeft].y > stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+
+//--------------------------------------------------------------
+eGestureCheckResult	LeftHandUpSegment2::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand above Shoulder
+	if(stSkeleton.aJoints[JointType_HandLeft].y < stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+#pragma endregion
+
+#pragma region Left Hand down
+///////////////////////////////////////
+//Gesture:Hand down
+///////////////////////////////////////
+eGestureCheckResult	LeftHandDownSegment1::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand above Shoulder
+	if(stSkeleton.aJoints[JointType_HandLeft].y < stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+
+//--------------------------------------------------------------
+eGestureCheckResult	LeftHandDownSegment2::CheckGesture(const stSCREEN_SKELETON& stSkeleton)
+{
+	// Hand down Shoulder
+	if(stSkeleton.aJoints[JointType_HandLeft].y > stSkeleton.aJoints[JointType_SpineBase].y)
+	{
+		return eGesutreCheck_Success;
+	}
+	else
+	{
+		return eGesutreCheck_Pause;
+	}
+}
+#pragma endregion

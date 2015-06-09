@@ -40,6 +40,7 @@ void TextCurveSlider::updateCurveSlider(float fDelta)
 		return;
 	}
 	_fTimer = 0;
+	
 	_IterElement->fAnimDuraction.animateFromTo(0.0, 1.0);
 	_IterElement->fAnimAlpha.reset();
 	_IterElement->fAlpha = cBASE_ALPHA;
@@ -63,7 +64,6 @@ void TextCurveSlider::drawCurveSlider()
 	ofPushMatrix();
 	{	
 		ofEnableAlphaBlending();
-
 		ofTranslate(_DrawPos);
 		ofRotateY(_fRotate);
 		
@@ -92,16 +92,12 @@ void TextCurveSlider::drawCurveSlider()
 				
 				RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
 										-RIter_->TextImg.height/2 + RIter_->Offset.y);
-				//RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x + Pos_.x,
-				//						-RIter_->TextImg.height/2 + RIter_->Offset.y + Pos_.y,
-				//						Pos_.z);
 				ofPopMatrix();
 			}
 			else
 			{
 				ofPushMatrix();
 				{
-					//ofTranslate(ofPoint(0, 0, _AnimForward.getCurrentPosition().z));
 					ofTranslate(_AnimForward.getCurrentPosition());
 					ofRotateY(_AnimRotate.getCurrentValue());
 					ofSetColor(255, 255, 255, RIter_->fAlpha);
@@ -122,7 +118,6 @@ void TextCurveSlider::setCurveSliderData(string strDataXML, float fDuration, flo
 {
 	_ElementList.clear();
 	_fInterval = fInterval;
-
 
 	//XML
 	ofxXmlSettings	xmlLoader_;
@@ -161,7 +156,6 @@ void TextCurveSlider::setCurveSliderData(string strDataXML, float fDuration, flo
 
 		_ElementList.push_back(NewElement_);
 	}
-
 	_IterElement = _ElementList.begin();
 }
 

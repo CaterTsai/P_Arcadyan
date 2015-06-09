@@ -23,6 +23,7 @@ void ArcadyanTheatre::setupTheatre()
 	//Actor
 	//////////////////////
 	//S_Open
+	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_SwingHandWordTips, "images/start_tip.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_SwingHandTipsVideo, "videos/tips/swing.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
 
 	//S_Gate
@@ -67,7 +68,7 @@ void ArcadyanTheatre::setupTheatre()
 	//Plane
 	//////////////////////
 	//S_Open
-	_Director.AddPlane(NAME_MANAGER::S_Open, NAME_MANAGER::P_OpenSwingTips, 0);
+	_Director.AddPlane(NAME_MANAGER::S_Open, NAME_MANAGER::P_OpenSwingTips, 0, ofPoint(0, 0), WINDOW_WIDTH, WINDOW_HEIGHT, false);
 		
 	//S_Gate
 	_Director.AddPlane(NAME_MANAGER::S_Gate, NAME_MANAGER::P_GateBG, 0);
@@ -102,6 +103,7 @@ void ArcadyanTheatre::setupTheatre()
 	///////////////////////
 	//S_Open
 	_Director.AddElement(NAME_MANAGER::E_OpenTips, NAME_MANAGER::P_OpenSwingTips, NAME_MANAGER::A_SwingHandTipsVideo);
+	_Director.AddElement(NAME_MANAGER::E_OpenWordTips, NAME_MANAGER::P_OpenSwingTips, NAME_MANAGER::A_SwingHandWordTips, 1, ofPoint(WINDOW_WIDTH/2 - 1634/2, WINDOW_HEIGHT - 127 - 50));
 
 	//S_Gate
 	_Director.AddElement(NAME_MANAGER::E_GateBG, NAME_MANAGER::P_GateBG, NAME_MANAGER::A_DoorImageBG);
@@ -157,7 +159,7 @@ void ArcadyanTheatre::setupTheatre()
 	ofxVideoElement* pVideoElement_;
 	_Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
 	pVideoElement_->SetVideoLoop(true);
-	pVideoElement_->SetVideoAutoPlay(false);
+	pVideoElement_->SetVideoAutoPlay(true);
 
 	_Director.GetElementPtr(NAME_MANAGER::E_GateOpenTips, pVideoElement_);
 	pVideoElement_->SetVideoLoop(true);
@@ -308,7 +310,7 @@ void ArcadyanTheatre::resetTheatre()
 	//Control Event
 	this->resetControlEvent();
 
-	_Director.Replay();
+	_Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
 }
 
 //--------------------------------------------------------------
@@ -335,6 +337,16 @@ void ArcadyanTheatre::TheatreAnimInit(string strScenes)
 		
 		_Director.GetPlanePtr(NAME_MANAGER::P_TakePictureUI, pPlanePtr_);
 		_Director.AddAnimation(NAME_MANAGER::S_TakePicture, 0, new ofxFadeInAnimation(NAME_MANAGER::ANIM_TakePictureFadeIn, pPlanePtr_, 0.5, 1, 0));
+	}
+	else if(strScenes == NAME_MANAGER::INIT_SwingTipsFadein)
+	{
+		_Director.GetPlanePtr(NAME_MANAGER::P_OpenSwingTips, pPlanePtr_);
+		_Director.AddAnimation(NAME_MANAGER::S_Open, 0, new ofxFadeInAnimation(NAME_MANAGER::ANIM_SwingTipsFadeIn, pPlanePtr_, 0.5, 0.0, 0.0));
+	}
+	else if(strScenes == NAME_MANAGER::INIT_SwingTipsFadeout)
+	{
+		_Director.GetPlanePtr(NAME_MANAGER::P_OpenSwingTips, pPlanePtr_);
+		_Director.AddAnimation(NAME_MANAGER::S_Open, 0, new ofxFadeOutAnimation(NAME_MANAGER::ANIM_SwingTipsFadeOut, pPlanePtr_, 0.5, 0.0, 0.0));
 	}
 	else if(strScenes == NAME_MANAGER::INIT_PhotoFrameChange)
 	{
@@ -436,6 +448,10 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 	//Animation Element Event
 	if(e.strMessage == NAME_MANAGER::E_TakePictureCountdown)
 	{
+		ofxAnimationImageElement* ptr_ = nullptr;
+		_Director.GetElementPtr(NAME_MANAGER::E_TakePictureCountdown, ptr_);
+		ptr_->SetVisible(false);
+
 		string strEventMsg_ = NAME_MANAGER::T_TakePhoto;
 		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
 
@@ -459,6 +475,8 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 	{
 		string strEventMsg_ = NAME_MANAGER::T_TakePictureIsReady;
 		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
+
+		this->enableControlEvent(NAME_MANAGER::S_TakePicture);
 	}
 	else if(e.strMessage == NAME_MANAGER::ANIM_PhotoFrameFadeOut)
 	{
@@ -470,6 +488,8 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 		ofxVideoElement*	pVideoElement_ = nullptr;
 		_Director.GetElementPtr(NAME_MANAGER::E_Ending, pVideoElement_);
 		pVideoElement_->PlayVideo();
+
+		this->stopCityLoop();
 	}
 }
 
@@ -670,6 +690,7 @@ void ArcadyanTheatre::setupControlEvent()
 	pProductCtrlPtr_->setupTouchTarget(ProductImg_, ofPoint(1255, 510));
 	_CtrlEventMgr.insert(make_pair(NAME_MANAGER::S_Product, pProductCtrlPtr_));
 
+
 	//Add event listener
 	ofAddListener(pGreenbuildingCtrlPtr_->ControlEvent, this, &ArcadyanTheatre::onControlEvent);
 	ofAddListener(pMilestoneCtrlPtr_->ControlEvent, this, &ArcadyanTheatre::onControlEvent);
@@ -680,11 +701,14 @@ void ArcadyanTheatre::setupControlEvent()
 void ArcadyanTheatre::updateControlEvent(ofPoint CtrlPos)
 {
 	string strScenesName_ = _Director.GetNowScenes()->GetScenesName();
-	auto CtrlPtr_ = _CtrlEventMgr.find(strScenesName_);
+	
 
-	if(CtrlPtr_ != _CtrlEventMgr.end())
-	{
-		CtrlPtr_->second->updateControlEvent(CtrlPos);
+	for(auto Iter_ = _CtrlEventMgr.begin(); Iter_ != _CtrlEventMgr.end(); ++Iter_)
+	{	
+		if(Iter_->first == strScenesName_)
+		{
+			Iter_->second->updateControlEvent(CtrlPos);
+		}
 	}
 }
 
@@ -692,41 +716,37 @@ void ArcadyanTheatre::updateControlEvent(ofPoint CtrlPos)
 void ArcadyanTheatre::drawControlEvent()
 {
 	string strScenesName_ = _Director.GetNowScenes()->GetScenesName();
-	auto CtrlPtr_ = _CtrlEventMgr.find(strScenesName_);
-
-	if(CtrlPtr_ != _CtrlEventMgr.end())
+	
+	for(auto Iter_ = _CtrlEventMgr.begin(); Iter_ != _CtrlEventMgr.end(); ++Iter_)
 	{
-		CtrlPtr_->second->drawControlEvent();
+		if(Iter_->first == strScenesName_)
+		{
+			Iter_->second->drawControlEvent();
+		}
 	}
 }
 
 //--------------------------------------------------------------
 void ArcadyanTheatre::enableControlEvent(string strScenceName)
 {
-	auto CtrlPtr_ = _CtrlEventMgr.find(strScenceName);
-	
-	if(CtrlPtr_ != _CtrlEventMgr.end())
+	for(auto Iter_ = _CtrlEventMgr.begin(); Iter_ != _CtrlEventMgr.end(); ++Iter_)
 	{
-		CtrlPtr_->second->setDisplay(true);
-	}
-	else
-	{
-		ofLog(OF_LOG_ERROR, "Can't found control event in this scence" + strScenceName);
+		if(Iter_->first == strScenceName)
+		{
+			Iter_->second->setDisplay(true);
+		}
 	}
 }
 
 //--------------------------------------------------------------
 void ArcadyanTheatre::disableControlEvent(string strScenceName)
 {
-	auto CtrlPtr_ = _CtrlEventMgr.find(strScenceName);
-	
-	if(CtrlPtr_ != _CtrlEventMgr.end())
+	for(auto Iter_ = _CtrlEventMgr.begin(); Iter_ != _CtrlEventMgr.end(); ++Iter_)
 	{
-		CtrlPtr_->second->setDisplay(false);
-	}
-	else
-	{
-		ofLog(OF_LOG_ERROR, "Can't found control event in this scence" + strScenceName);
+		if(Iter_->first == strScenceName)
+		{
+			Iter_->second->setDisplay(false);
+		}
 	}
 }
 

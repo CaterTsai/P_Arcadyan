@@ -40,7 +40,6 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	{
 		return;
 	}
-
 	_GreenBuilding.update();
 	_GreenBuildingLoop.update();
 	_GreenBuildingLight.update();
@@ -58,6 +57,7 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	//Exit check
 	if(_ExitRect.inside(CtrlPos))
 	{
+		this->stopRotate();
 		_fExitCounter -= fDelta;
 		if(_fExitCounter <= 0.0)
 		{
@@ -72,11 +72,11 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	}
 
 	//Rotate check
-	if(CtrlPos.x >= 0 && CtrlPos.x < 250)
+	if(CtrlPos.x >= 0 && CtrlPos.x <= WINDOW_WIDTH/4)
 	{
 		this->startRotate(true);
 	}
-	else if(CtrlPos.x < 1920 && CtrlPos.x > 1670)
+	else if(CtrlPos.x < WINDOW_WIDTH && CtrlPos.x > WINDOW_WIDTH - WINDOW_WIDTH/4)
 	{
 		this->startRotate(false);
 	}
@@ -84,8 +84,6 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	{
 		this->stopRotate();
 	}
-
-
 }
 
 //--------------------------------------------------------------
@@ -113,8 +111,8 @@ void GreenBuildingCtrl::drawGreenBuildingCtrl()
 		this->drawImage();
 
 		//UI
-		_ArrowLeft.draw(100, ofGetWindowHeight()/2 - _ArrowLeft.height/2);
-		_ArrowRight.draw(1820 - _ArrowRight.width, ofGetWindowHeight()/2 - _ArrowRight.height/2);
+		_ArrowLeft.draw(WINDOW_WIDTH/6 - _ArrowRight.width/2, 735 - _ArrowLeft.height/2);
+		_ArrowRight.draw((1920 - WINDOW_WIDTH/6) - _ArrowRight.width/2, 735 - _ArrowRight.height/2);
 
 		ofPushMatrix();
 		ofTranslate(_CtrlPos);
@@ -206,8 +204,9 @@ void GreenBuildingCtrl::initialImageList(string strXMLName)
 		_ImageList.push_back(Tmp_);
 	}
 
-	_ImgSize.set(0, 0, 430, 320);
-	_DrawPos.set(1665, 493);
+	_ImgSize.set(0, 0, 388, 320);
+	_DrawPos.set(1651, 493, 0);
+
 }
 
 //--------------------------------------------------------------
@@ -239,7 +238,7 @@ void GreenBuildingCtrl::drawImage()
 	ofSetColor(255);
 	ofPushMatrix();
 	ofTranslate(_DrawPos);
-	ofRotateY(-10);
+	ofRotateY(-12);
 	{
 		for(auto& Iter_ : _ImageList)
 		{

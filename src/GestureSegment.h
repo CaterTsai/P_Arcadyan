@@ -70,66 +70,52 @@ class WaveLeftSegment2 : public IGestureSegment
 };
 
 ///////////////////////////////////////
-//Gesture:Swipe Right
+//Gesture:Right Hand up
 ///////////////////////////////////////
-class SwipeRightSegment1 : public IGestureSegment
-{
-	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
-
-};
-
-class SwipeRightSegment2 : public IGestureSegment
+class RightHandUpSegment1 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
 
+class RightHandUpSegment2 : public IGestureSegment
+{
+	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
+};
 ///////////////////////////////////////
-//Gesture:Swipe Left
+//Gesture:Right Hand down
 ///////////////////////////////////////
-class SwipeLeftSegment1 : public IGestureSegment
+class RightHandDownSegment1 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
 
-class SwipeLeftSegment2 : public IGestureSegment
+class RightHandDownSegment2 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
 
 ///////////////////////////////////////
-//Gesture:Swipe Up
+//Gesture:Left Hand up
 ///////////////////////////////////////
-class SwipeUpSegment1 : public IGestureSegment
+class LeftHandUpSegment1 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
 
-class SwipeUpSegment2 : public IGestureSegment
+class LeftHandUpSegment2 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
-
-class SwipeUpSegment3 : public IGestureSegment
-{
-	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
-};
-
 ///////////////////////////////////////
-//Gesture:Swipe Down
+//Gesture:Left Hand down
 ///////////////////////////////////////
-class SwipeDownSegment1 : public IGestureSegment
+class LeftHandDownSegment1 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
 
-class SwipeDownSegment2 : public IGestureSegment
+class LeftHandDownSegment2 : public IGestureSegment
 {
 	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
 };
-
-class SwipeDownSegment3 : public IGestureSegment
-{
-	eGestureCheckResult	CheckGesture(const stSCREEN_SKELETON&);
-};
-
 #endif //KINECT_GEATURE_SEGMENT
