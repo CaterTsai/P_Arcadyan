@@ -44,19 +44,20 @@ void InfoDisplay::updateInfoDisplay(float fDelta_)
 					_eInfoState = eSTATE_CHINESE_FADE_OUT;
 					_AnimFadeAlpha.setDuration(0.5);
 					_AnimFadeAlpha.animateFromTo(255, 0);
+
+					_AnimBackplaneAlpha.setDuration(2.0);
+					_AnimBackplaneAlpha.animateFromTo(255, 0);
 				}
 			}
 			break;
 		case eSTATE_CHINESE_FADE_OUT:
 			{
-				if(_AnimFadeAlpha.getPercentDone() == 1.0)
+				if(_AnimBackplaneAlpha.getPercentDone() == 1.0)
 				{
-					_bIsChinese = false;
-					this->updateDisplay();
+					_bIsDisplay = false;
 
-					_AnimFadeAlpha.setDuration(0.5);
-					_AnimFadeAlpha.animateFromTo(0, 255);
-					_eInfoState = eSTATE_ENGLISH_FADE_IN;
+					_eInfoState = eSTATE_FINISH;
+					ofNotifyEvent(FinishEvent, _bIsDisplay, this);
 				}
 			}
 			break;
@@ -132,11 +133,12 @@ void InfoDisplay::drawInfoDisplay()
 }
 
 //--------------------------------------------------------------
-void InfoDisplay::startDisplay(float fFadeTime)
+void InfoDisplay::startDisplay(bool bIsChinese, float fFadeTime)
 {	
-	_bIsChinese = true;
+	_bIsChinese = bIsChinese;
 	_bIsDisplay = true;
-	_eInfoState = eSTATE_CHINESE_FADE_IN;
+	
+	_eInfoState = (bIsChinese?eSTATE_CHINESE_FADE_IN:eSTATE_CHINESE_FADE_IN);	
 
 	this->updateDisplay();
 	
@@ -350,8 +352,6 @@ void InfoDisplay::updateDisplay()
 			_strTimeM = ofGetTimestampString("%M");
 			oRect_ = _FontMS80.getStringBoundingBox(strTime_, 0, 0);
 			_FontMS80.drawString(strTime_, fNowWidth_ - 483.0/2, fNowHeight_ + oRect_.getHeight());
-			
-			
 		}
 		Canvas_.end();
 		

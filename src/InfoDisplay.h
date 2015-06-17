@@ -27,9 +27,11 @@ enum eINFO_STATE
 	eSTATE_CHINESE_FADE_IN,
 	eSTATE_CHINESE_DISPLAY,
 	eSTATE_CHINESE_FADE_OUT,
+
 	eSTATE_ENGLISH_FADE_IN,
 	eSTATE_ENGLISH_DISPLAY,
 	eSTATE_ENGLISH_FADE_OUT,
+
 	eSTATE_FINISH
 };
 
@@ -40,7 +42,7 @@ public:
 	void updateInfoDisplay(float fDelta = 0.0);
 	void drawInfoDisplay();
 
-	void startDisplay(float fFadeTime = .0);
+	void startDisplay(bool bIsChinese, float fFadeTime = .0);
 
 private:
 	bool				_bIsDisplay;
