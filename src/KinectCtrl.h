@@ -48,12 +48,27 @@ private:
 	CTKinectV2	_CTKinect;
 
 ///////////////////////////////
+//RGB
+///////////////////////////////
+public:
+	bool getRGBCam(ofImage& refDisplay)
+	{
+		return _CTKinect.getColorFrame(refDisplay);
+	}
+public:
+	inline void setRGBCam(bool bValue)
+	{
+		bValue?_CTKinect.enableColorFrame():_CTKinect.disableColorFrame();
+	}
+
+///////////////////////////////
 //Gesture
 ///////////////////////////////
 public:
 	void setupGesture();
 	void startGestureCheck(const string& strGesutreName);
 	void stopGesutreCheck();
+
 private:
 	GestureManager	_GestureMgr;
 };

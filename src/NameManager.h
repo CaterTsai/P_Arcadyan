@@ -50,7 +50,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_ChoosePhotoframeText);
 	CREATE_VALUE(A_CheeseText);
 	CREATE_VALUE(A_PictureCountdown);
-	CREATE_VALUE(A_WEBCAM);
+	CREATE_VALUE(A_CamDisplay);
 	CREATE_VALUE(A_PhotoFrame);
 	CREATE_VALUE(A_Photo);
 	CREATE_VALUE(A_Ending);
@@ -108,7 +108,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(E_ChoosePhotoframeText);
 	CREATE_VALUE(E_CheeseText);
 	CREATE_VALUE(E_TakePictureCountdown);
-	CREATE_VALUE(E_WEBCAM);
+	CREATE_VALUE(E_CamDisplay);
 	CREATE_VALUE(E_PhotoFrame);
 	CREATE_VALUE(E_Photo);
 	CREATE_VALUE(E_Ending);

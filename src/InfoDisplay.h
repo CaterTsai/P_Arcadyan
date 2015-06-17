@@ -109,7 +109,6 @@ public:
 ////////////////////////////
 private:
 	string ws2s(const wstring& wstr);
-
 };
 
 

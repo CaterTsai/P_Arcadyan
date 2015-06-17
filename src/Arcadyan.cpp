@@ -118,6 +118,14 @@ void Arcadyan::update()
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
 		_PhotoFrameSlider.updateVirticalSlider(fDelta_, CtrlPos_);
+
+		//Get Kinect RGB camera Image
+		ofxDynamicImageElement* pDynamicPtr_ = nullptr;
+		_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_CamDisplay, pDynamicPtr_);
+
+		ofImage Display_;
+		_KinectCtrl.getRGBCam(Display_);
+		pDynamicPtr_->updateImg(Display_);
 	}
 
 	//Update Timeline Subtitle
@@ -351,6 +359,9 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 		pPhotoFrame_->updateImg(NowPhotoFrame_);
 		
 		_PhotoFrameSlider.setDisplay();
+
+		//Start Kinect RGB camera
+		_KinectCtrl.setRGBCam(true);
 	}
 	else if(e == NAME_MANAGER::T_ChangePhotoFrame)
 	{
@@ -608,14 +619,15 @@ void Arcadyan::onTextSlider(bool& e)
 void Arcadyan::takePicture()
 {
 	ofImage PhotoFrame_, Photo_, MixResult_;
-	ofxWebcamElement* pWebcam_ = nullptr;
+	ofxDynamicImageElement* pCamDisplay_ = nullptr;
 	ofxDynamicImageElement* pPhoto_ = nullptr;
 
-	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_WEBCAM, pWebcam_);
+	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_CamDisplay, pCamDisplay_);
 	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_Photo, pPhoto_);
 
 	//get webcam image
-	pWebcam_->getImage(Photo_);
+	pCamDisplay_->getImage(Photo_);
+	//pWebcam_->getImage(Photo_);
 
 	//get photo frame
 	_PhotoFrameSlider.getNowImage(PhotoFrame_);
@@ -627,15 +639,8 @@ void Arcadyan::takePicture()
 	{
 		ofPushStyle();
 		ofSetColor(255);
-		
-		ofPushMatrix();
-		{
-			ofTranslate(Photo_.getWidth(), 0);
-			ofScale(-1, 1);
-			Photo_.draw(0, 0);
-		}
-		ofPopMatrix();
-		
+
+		Photo_.draw(0, 0);		
 		PhotoFrame_.draw(0, 0);
 		ofPopStyle();
 	}

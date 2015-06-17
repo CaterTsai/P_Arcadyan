@@ -57,7 +57,7 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_ChoosePhotoframeText, "images/PhotoText_1.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_CheeseText, "images/PhotoText_2.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxAnimationImageActor(NAME_MANAGER::A_PictureCountdown, "images/countdown/", eBLEND_ALPHA));
-	_Director.AddActor(new ofxWebcamActor(NAME_MANAGER::A_WEBCAM, 0, 60,  WEBCAM_WIDTH, WEBCAM_HEIGHT));
+	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_CamDisplay));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PhotoFrame, eBLEND_ALPHA));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_Photo));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_Ending, "videos/ending.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
@@ -145,7 +145,7 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddElement(NAME_MANAGER::E_TakePictureBackplane, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureBackplane, 0, ofPoint(0));
 	_Director.AddElement(NAME_MANAGER::E_ChoosePhotoframeText, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_ChoosePhotoframeText, 1, ofPoint(1497, 222));
 	_Director.AddElement(NAME_MANAGER::E_CheeseText, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_CheeseText, 2, ofPoint(1497, 265), false);
-	_Director.AddElement(NAME_MANAGER::E_WEBCAM, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_WEBCAM, 3, ofPoint(518, 142));
+	_Director.AddElement(NAME_MANAGER::E_CamDisplay, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_CamDisplay, 3, ofPoint(518, 142));
 	_Director.AddElement(NAME_MANAGER::E_TakePictureCountdown, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureCountdown, 4, ofPoint(910, 300), false);
 	_Director.AddElement(NAME_MANAGER::E_PhotoFrame, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PhotoFrame, 5, ofPoint(518, 142));
 	_Director.AddElement(NAME_MANAGER::E_Photo, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_Photo, 6, ofPoint(518, 142), false);
@@ -205,14 +205,13 @@ void ArcadyanTheatre::setupTheatre()
 	pVideoElement_->StartEvent();
 	pVideoElement_->SetVideoAutoPlay(false);
 
-	ofxWebcamElement*	pWebcamElement_;
-	_Director.GetElementPtr(NAME_MANAGER::E_WEBCAM, pWebcamElement_);
-	pWebcamElement_->m_stElementBase.fScale = 0.467;
-	pWebcamElement_->m_stElementBaseBackup.fScale = 0.467;
-	pWebcamElement_->m_stElementBase.bIsMirror = true;
-	pWebcamElement_->m_stElementBaseBackup.bIsMirror = true;
-
 	ofxDynamicImageElement*	pDyamnicElement_;
+	_Director.GetElementPtr(NAME_MANAGER::E_CamDisplay, pDyamnicElement_);
+	pDyamnicElement_->m_stElementBase.fScale = 0.467;
+	pDyamnicElement_->m_stElementBaseBackup.fScale = 0.467;
+	//pDyamnicElement_->m_stElementBase.bIsMirror = true;
+	//pDyamnicElement_->m_stElementBaseBackup.bIsMirror = true;
+		
 	_Director.GetElementPtr(NAME_MANAGER::E_PhotoFrame, pDyamnicElement_);
 	pDyamnicElement_->m_stElementBase.fScale = 0.467;
 	pDyamnicElement_->m_stElementBaseBackup.fScale = 0.467;
