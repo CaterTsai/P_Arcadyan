@@ -1,6 +1,6 @@
 #include "TextCurveSlider.h"
 
-void TextCurveSlider::updateCurveSlider(float fDelta)
+void TextCurveSlider::updateCurveSlider(float fDelta, ofRectangle& CtrlArea)
 {
 	if(!_bStartAnim)
 	{
@@ -12,9 +12,32 @@ void TextCurveSlider::updateCurveSlider(float fDelta)
 		Element_.update(fDelta);
 	}
 
+	_CtrlArea = CtrlArea;
+
+	//Check Ctrl
+	auto Iter_ = _ElementList.rbegin();
+	for(; Iter_ != _ElementList.rend(); ++Iter_)
+	{
+		if(Iter_->fAlpha > cBASE_ALPHA)
+		{
+			break;
+		}
+	}
+	if(Iter_ != _ElementList.rend() && Iter_->TriggerArea.intersects(CtrlArea))
+	{
+		if(_eRotateState == eTEXT_CAN_FORWARD)
+		{
+			this->RotateToForward();
+		}
+		else if(_eRotateState == eTEXT_CAN_GOBACK)
+		{
+			this->RotateToBackward();
+		}
+	}
+
 	//rotate
 	this->updateRotate(fDelta);
-	if(_eRotateState != eTEXT_BACKWARD)
+	if(_eRotateState != eTEXT_CAN_FORWARD && _eRotateState != eTEXT_BACKWARD)
 	{
 		return;
 	}
@@ -29,7 +52,7 @@ void TextCurveSlider::updateCurveSlider(float fDelta)
 			//Finish
 			_bStartAnim = false;
 			ofNotifyEvent(TextSliderFinishEvent, _bStartAnim, this);
-			_IterElement = _ElementList.begin();
+
 		}
 		return;
 	}
@@ -70,6 +93,9 @@ void TextCurveSlider::drawCurveSlider()
 		for(auto RIter_ = _ElementList.rbegin(); RIter_ < _ElementList.rend(); ++RIter_)
 		{
 			ofPoint Pos_;
+			GLdouble screenX_, screenY_, screenZ_;
+			GLdouble screen2X_, screen2Y_, screen2Z_;
+
 			float fRotate_;
 			if(RIter_->fAnimDuraction.hasFinishedAnimating())
 			{
@@ -92,25 +118,83 @@ void TextCurveSlider::drawCurveSlider()
 				
 				RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
 										-RIter_->TextImg.height/2 + RIter_->Offset.y);
+
+				glGetDoublev(GL_MODELVIEW_MATRIX, _mvM);
+				glGetDoublev(GL_PROJECTION_MATRIX, _pM);
+				glGetIntegerv(GL_VIEWPORT, _vp);
+
 				ofPopMatrix();
 			}
 			else
 			{
 				ofPushMatrix();
-				{
-					ofTranslate(_AnimForward.getCurrentPosition());
-					ofRotateY(_AnimRotate.getCurrentValue());
-					ofSetColor(255, 255, 255, RIter_->fAlpha);
-					RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
-											-RIter_->TextImg.height/2 + RIter_->Offset.y,
-											0);
-				}
+				ofTranslate(_AnimForward.getCurrentPosition());
+				ofRotateY(_AnimRotate.getCurrentValue());
+				ofSetColor(255, 255, 255, RIter_->fAlpha);
+				RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
+										-RIter_->TextImg.height/2 + RIter_->Offset.y,
+										0);
+
+				glGetDoublev(GL_MODELVIEW_MATRIX, _mvM);
+				glGetDoublev(GL_PROJECTION_MATRIX, _pM);
+				glGetIntegerv(GL_VIEWPORT, _vp);
 				ofPopMatrix();
 			}
+
+			//Get Screen position
+			gluProject(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
+						-RIter_->TextImg.height/2 + RIter_->Offset.y,
+						0,
+						_mvM, _pM, _vp, &screenX_, &screenY_, &screenZ_);
+
+			gluProject(	RIter_->TextImg.width/2 + RIter_->Offset.x,
+						RIter_->TextImg.height/2 + RIter_->Offset.y,
+						0,
+						_mvM, _pM, _vp, &screen2X_, &screen2Y_, &screen2Z_);
+
+			ofPoint Pos1_, Pos2_;
+
+			Pos1_.x = screenX_;
+			Pos1_.y = ofGetWindowHeight() - screenY_;
+			Pos1_.z = 0;
+
+			Pos2_.x = screen2X_;
+			Pos2_.y = ofGetWindowHeight() - screen2Y_;
+			Pos2_.z = 0;
+
+			RIter_->TriggerArea.set(ofRectangle(Pos1_, Pos2_));
 		}
 	}
 	ofPopMatrix();
 	ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void TextCurveSlider::drawTriggerRect()
+{	
+	auto Iter_ = _ElementList.rbegin();
+	for(; Iter_ != _ElementList.rend(); ++Iter_)
+	{
+		if(Iter_->fAlpha > cBASE_ALPHA)
+		{
+			break;
+		}
+	}
+
+	if(Iter_ == _ElementList.rend())
+	{
+		return;
+	}
+
+	ofPushStyle();
+	{
+		ofNoFill();
+		ofSetLineWidth(3);
+		ofSetColor(255, 0, 0);
+
+		ofRect(Iter_->TriggerArea);
+	}	
+	ofPopStyle();	
 }
 
 //--------------------------------------------------------------
@@ -209,13 +293,20 @@ void TextCurveSlider::startCurveSlider()
 		return;
 	}
 
+	for(auto Iter_ = _ElementList.begin(); Iter_ != _ElementList.end(); ++Iter_)
+	{
+		Iter_->fAlpha = cBASE_ALPHA;
+		Iter_->fAnimAlpha.reset();
+		Iter_->bIsRotate = false;
+		Iter_->fAnimDuraction.reset(0);
+	}
+
 	_IterElement = _ElementList.begin();
 	_IterElement->fAnimDuraction.animateFromTo(0.0, 1.0);
-	_IterElement->fAlpha = cBASE_ALPHA;
-	_IterElement->fAnimAlpha.reset();
 	_fTimer = 0;
 	_IterElement++;
 	_bStartAnim = true;
+	_eRotateState = eTEXT_CAN_FORWARD;
 }
 
 //--------------------------------------------------------------
@@ -271,7 +362,7 @@ void TextCurveSlider::RotateToForward()
 		return;
 	}
 
-	if(_eRotateState == eTEXT_BACKWARD || _eRotateState == eTEXT_ROTATE_TO_BACKWARD)
+	if(_eRotateState == eTEXT_CAN_FORWARD)
 	{
 		if(!this->getRotateElement(_IterRotate))
 		{
@@ -304,7 +395,7 @@ void TextCurveSlider::RotateToBackward()
 		return;
 	}
 
-	if(_eRotateState == eTEXT_FORWARD || _eRotateState == eTEXT_ROTATE_TO_FORWARD)
+	if(_eRotateState == eTEXT_CAN_GOBACK)
 	{
 		_AnimRotate.animateFromTo(90, _RegisterRotate);
 		_AnimForward.animateTo(_RegisterPos);
@@ -315,7 +406,6 @@ void TextCurveSlider::RotateToBackward()
 //--------------------------------------------------------------
 void TextCurveSlider::updateRotate(float fDelta)
 {
-
 	_AnimRotate.update(fDelta);
 	_AnimForward.update(fDelta);
 
@@ -326,6 +416,16 @@ void TextCurveSlider::updateRotate(float fDelta)
 			if( _AnimRotate.getPercentDone() == 1.0 && _AnimForward.getPercentDone() == 1.0 )
 			{
 				_eRotateState = eTEXT_FORWARD;
+				_fRotateTimer = cCAN_GOBCAK_TIME;
+			}
+		}
+		break;
+	case eTEXT_FORWARD:
+		{
+			_fRotateTimer -= fDelta;
+			if(_fRotateTimer <= 0.0)
+			{
+				_eRotateState = eTEXT_CAN_GOBACK;
 			}
 		}
 		break;
@@ -335,7 +435,17 @@ void TextCurveSlider::updateRotate(float fDelta)
 			{
 				_IterRotate->bIsRotate = false;
 				_eRotateState = eTEXT_BACKWARD;
+				_fRotateTimer = cCAN_FORWARD_TIME;
 				this->resumeSlider();
+			}
+		}
+		break;
+	case eTEXT_BACKWARD:
+		{
+			_fRotateTimer -= fDelta;
+			if(_fRotateTimer <= 0.0)
+			{
+				_eRotateState = eTEXT_CAN_FORWARD;
 			}
 		}
 		break;
@@ -363,7 +473,7 @@ void TextCurveSlider::resumeSlider()
 //--------------------------------------------------------------
 bool TextCurveSlider::getRotateElement(vector<_stTEXT_CURVE_ELEMENT>::iterator& refIter)
 {
-	if(!_bStartAnim || _eRotateState != eTEXT_BACKWARD)
+	if(!_bStartAnim || _eRotateState != eTEXT_CAN_FORWARD)
 	{
 		return false;
 	}
@@ -378,8 +488,6 @@ bool TextCurveSlider::getRotateElement(vector<_stTEXT_CURVE_ELEMENT>::iterator& 
 		bHaveActive_ = true;
 		refIter = Iter;
 	}
-
-	
 	return bHaveActive_;
 }
 #pragma endregion

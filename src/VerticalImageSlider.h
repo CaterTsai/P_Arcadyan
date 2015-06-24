@@ -20,7 +20,7 @@ class VirticalSlider
 {
 public:
 	void setupVirticalSlider(ofRectangle DisplayArea, float fInterval);
-	void updateVirticalSlider(float fDelta, ofVec2f& CtrlPos);
+	void updateVirticalSlider(float fDelta, ofRectangle& CtrlArea);
 	void drawVirticalSlider(int x, int y);
 	void resetVirticalSlider();
 	bool toRight();
@@ -69,8 +69,8 @@ private:
 	void drawControl();
 
 private:
-	ofImage			_CtrlImg, _ArrowLeft, _ArrowRight, _Camera;
-	ofRectangle		_CtrlArea, _LeftArea, _RightArea, _CameraArea;
+	ofImage			_ArrowLeft, _ArrowRight, _Camera;
+	ofRectangle		_LeftArea, _RightArea, _CameraArea;
 
 
 ////////////////////////////

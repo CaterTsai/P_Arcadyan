@@ -90,8 +90,7 @@ private:
 
 private:
 	bool			_bIsRotate;
-	ofImage			_CtrlImg, _ArrowLeft, _ArrowRight;
-	ofPoint			_CtrlPos;
+	ofImage			_ArrowLeft, _ArrowRight;
 
 	ofRectangle		_ExitRect;
 	float			_fExitCounter;
@@ -103,6 +102,7 @@ private:
 	void initialImageList(string strXMLName);
 	void updateImage(float fDelta, int iNowFrame);
 	void drawImage();
+	void resetImage();
 
 private:
 	ofPoint				_DrawPos;

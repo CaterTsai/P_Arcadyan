@@ -125,17 +125,17 @@ void KinectCtrl::setupGesture()
 	WaveRightSegmentList_.push_back( make_shared<WaveRightSegment2>() );
 	_GestureMgr.AddGesture(NAME_MANAGER::G_WAVE_HAND, WaveRightSegmentList_);
 
-	//Hand up
-	GestureSegmentList	RightHandUpSegmentList_;
-	//RightHandUpSegmentList_.push_back( make_shared<RightHandUpSegment1>() );
-	RightHandUpSegmentList_.push_back( make_shared<RightHandUpSegment2>() );
-	_GestureMgr.AddGesture(NAME_MANAGER::G_HAND_UP, RightHandUpSegmentList_);
+	////Hand up
+	//GestureSegmentList	RightHandUpSegmentList_;
+	////RightHandUpSegmentList_.push_back( make_shared<RightHandUpSegment1>() );
+	//RightHandUpSegmentList_.push_back( make_shared<RightHandUpSegment2>() );
+	//_GestureMgr.AddGesture(NAME_MANAGER::G_HAND_UP, RightHandUpSegmentList_);
 
-	//Hand down
-	GestureSegmentList	RightHandDownSegmentList_;
-	//RightHandDownSegmentList_.push_back( make_shared<RightHandDownSegment1>() );
-	RightHandDownSegmentList_.push_back( make_shared<RightHandDownSegment2>() );
-	_GestureMgr.AddGesture(NAME_MANAGER::G_HAND_DOWN, RightHandDownSegmentList_);
+	////Hand down
+	//GestureSegmentList	RightHandDownSegmentList_;
+	////RightHandDownSegmentList_.push_back( make_shared<RightHandDownSegment1>() );
+	//RightHandDownSegmentList_.push_back( make_shared<RightHandDownSegment2>() );
+	//_GestureMgr.AddGesture(NAME_MANAGER::G_HAND_DOWN, RightHandDownSegmentList_);
 }
 
 //--------------------------------------------------------------

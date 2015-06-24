@@ -36,9 +36,10 @@ public:
 			}
 
 			ofSetColor(_SubtitleColor);
-			_SubtitleFont.drawString(	Subtitle, 
-						fNewWidth_/2 - TextRect_.getWidth()/2, 
-						fNewHeight_/2 + TextRect_.getHeight()/2
+			_SubtitleFont.drawString(	
+				Subtitle, 
+				fNewWidth_/2 - TextRect_.getWidth()/2, 
+				fNewHeight_/2 + SUBTITLE_FONT_SIZE/2
 			);
 		}
 		ImgFbo_.end();

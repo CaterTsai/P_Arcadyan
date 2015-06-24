@@ -18,9 +18,7 @@ void GreenBuildingCtrl::setupGreenBuildingCtrl()
 
 	_ArrowLeft.loadImage("images/ArrowLeft.png");
 	_ArrowRight.loadImage("images/ArrowRight.png");
-	
-	_CtrlPos.set(0);
-	_CtrlImg.loadImage("images/hand.png");
+
 
 	_ExitRect.set(1680, 936, 206, 126);
 	_fExitCounter = cGREEN_BUILDING_EXIT_TIME;
@@ -53,7 +51,6 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	//Image Control
 	this->updateImage(fDelta, _GreenBuilding.getCurrentFrame());
 
-	_CtrlPos = CtrlPos;
 	//Exit check
 	if(_ExitRect.inside(CtrlPos))
 	{
@@ -114,10 +111,6 @@ void GreenBuildingCtrl::drawGreenBuildingCtrl()
 		_ArrowLeft.draw(WINDOW_WIDTH/6 - _ArrowRight.width/2, 735 - _ArrowLeft.height/2);
 		_ArrowRight.draw((1920 - WINDOW_WIDTH/6) - _ArrowRight.width/2, 735 - _ArrowRight.height/2);
 
-		ofPushMatrix();
-		ofTranslate(_CtrlPos);
-			_CtrlImg.draw(-_CtrlImg.getWidth()/2, -_CtrlImg.getHeight()/2);
-		ofPopMatrix();
 	}
 	ofPopStyle();
 }
@@ -134,9 +127,13 @@ void GreenBuildingCtrl::startGreenBuidling()
 	_bIsRotate = true;
 	_bFlip = false;
 	_GreenBuilding.play();
+	_GreenBuilding.setFrame(0);
+	_GreenBuilding.update();
 	_GreenBuilding.setSpeed(0.0);
 	
 	_GreenBuildingLight.play();
+
+	this->resetImage();
 }
 
 //--------------------------------------------------------------
@@ -251,5 +248,14 @@ void GreenBuildingCtrl::drawImage()
 	}
 	ofPopMatrix();
 	ofPopStyle();	
+}
+
+//--------------------------------------------------------------
+void GreenBuildingCtrl::resetImage()
+{
+	for(auto& Iter_ : _ImageList)
+	{
+		Iter_.eState = eIMAGE_DISABLE;
+	}
 }
 #pragma endregion

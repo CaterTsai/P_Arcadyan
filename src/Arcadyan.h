@@ -47,13 +47,27 @@ public:
 //Kinect
 //-------------------------------------------------
 public:
+	void KinectCtrlSetup();
+	void KinectCtrlUpdate();
+	void KinectCtrlDraw();
 	void OnGestureEvent(GestureEventArgs &e);
+
+public:
+	inline void setCtrlDisplay(bool bValue)
+	{
+		_bDisplayCtrl = bValue;
+	}
 public:
 	bool		_bHaveUser;
 	KinectCtrl	_KinectCtrl;
 
 	bool		_DisplayBody;
 
+	//Ctrl
+	bool		_bDisplayCtrl;
+	ofImage		_CtrlImg;
+	ofRectangle	_CtrlArea;
+	
 //-------------------------------
 // Control Event
 //-------------------------------
@@ -89,6 +103,7 @@ public:
 	void InitialVideoManager();
 	void onVideoEvent(string& e);
 private:
+	bool			_bVideoIsStart;
 	VideoManager	_VideoMgr;
 
 //-------------------------------------------------
@@ -117,9 +132,12 @@ private:
 //-------------------------------------------------
 public:
 	void takePicture();
+	void savePicture();
 	void onPhotoFrameChange(string& e);
 
 private:
+	ofImage			_MixResult;
+	bool			_bCanSavePhoto;
 	VirticalSlider	_PhotoFrameSlider;
 
 //-------------------------------------------------

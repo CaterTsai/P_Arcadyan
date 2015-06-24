@@ -138,14 +138,16 @@ void InfoDisplay::startDisplay(bool bIsChinese, float fFadeTime)
 	_bIsChinese = bIsChinese;
 	_bIsDisplay = true;
 	
-	_eInfoState = (bIsChinese?eSTATE_CHINESE_FADE_IN:eSTATE_CHINESE_FADE_IN);	
+	_eInfoState = (bIsChinese?eSTATE_CHINESE_FADE_IN:eSTATE_ENGLISH_FADE_IN);	
 
 	this->updateDisplay();
 	
 	_AnimFadeAlpha.setDuration(fFadeTime);
+	_AnimFadeAlpha.reset(0);
 	_AnimFadeAlpha.animateFromTo(0, 255);
 
 	_AnimBackplaneAlpha.setDuration(fFadeTime);
+	_AnimBackplaneAlpha.reset(0);
 	_AnimBackplaneAlpha.animateFromTo(0, 255);
 }
 

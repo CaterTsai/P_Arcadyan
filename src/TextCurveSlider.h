@@ -13,7 +13,9 @@ typedef struct _stTEXT_CURVE_ELEMENT
 	//Postion
 	ofxAnimatableFloat	fAnimDuraction;
 	ofPoint				Offset;	
-
+	
+	ofRectangle			TriggerArea;
+	
 	//Alpha
 	float				fAlpha;
 	ofxAnimatableFloat	fAnimAlpha;
@@ -67,12 +69,14 @@ public:
 		,_bDrawCurve(false)
 		,_DrawPos(ofPoint(0, 0))
 		,_fRotate(0.0)
-		,_eRotateState(eTEXT_BACKWARD)
+		,_eRotateState(eTEXT_CAN_FORWARD)
 		,_bIsContanctSetup(false)
 	{}
 
-	void updateCurveSlider(float fDelta);
+	void updateCurveSlider(float fDelta, ofRectangle& CtrlArea);
 	void drawCurveSlider();
+	void drawTriggerRect();
+
 	void setCurveSliderData(string strDataXML, float fDuration, float fInterval);	
 	void setCurveSliderPath(ofPoint StartPos, ofPoint EndPos, ofPoint C1, ofPoint C2, int iResolution = 200);
 	void setDisablePath(float fStartT, float fEndT);
@@ -109,6 +113,11 @@ private:
 	vector<_stTEXT_CURVE_ELEMENT>			_ElementList;
 	deque<_stTEXT_CURVE>					_TextCurve;
 
+	//
+	ofRectangle	_CtrlArea;
+	GLdouble _mvM[16], _pM[16];
+	GLint _vp[4];
+
 ////////////////////////////////////////
 //Rotate
 ////////////////////////////////////////
@@ -125,6 +134,7 @@ private:
 	eTEXT_ROTATE_STATE						_eRotateState;
 	vector<_stTEXT_CURVE_ELEMENT>::iterator	_IterRotate;
 	
+	float					_fRotateTimer;
 	ofPoint					_RegisterPos;
 	float					_RegisterRotate;
 	ofxAnimatableFloat		_AnimRotate;
