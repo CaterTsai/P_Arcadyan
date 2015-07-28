@@ -1,8 +1,23 @@
 #ifndef _ARCADYAN_PROTOCOL_
 #define _ARCADYAN_PROTOCOL_
 
+#define TIMEOUT_MODE
+#define MEM_CHECK
+
 #include "ofMain.h"
 #include "NameManager.h"
+
+#include <stdlib.h>
+#include <crtdbg.h>
+
+#define _CRTDBG_MAP_ALLOC
+#ifdef _DEBUG
+   #ifndef DBG_NEW
+      #define DBG_NEW new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+      #define new DBG_NEW
+   #endif
+#endif  // _DEBUG
+
 
 static const int WINDOW_WIDTH = 1920;
 static const int WINDOW_HEIGHT = 1080;
@@ -36,5 +51,14 @@ const float cGREEN_BUILDING_EXIT_TIME = 1.5;
 
 const float cKINECT_BODY_WIDTH = 205;
 const float cKINECT_BODY_HEIGHT = 170;
+
+//-------------------------------
+const float cSHAKE_TIMEOUT	= 10;
+const float cOPEN_TIMEOUT	= 5;
+const float cGREEN_IN_TIMEOUT =  5;
+const float cGREEN_OUT_TIMEOUT = 10;
+const float cMILESTONE_IN_TIMEOUT = 5;
+const float cPRODUCT_IN_TIMEOUT = 5;
+const float cTAKE_PHOTO_TIMEOUT = 5;
 
 #endif // !_ARCADYAN_PROTOCOL_

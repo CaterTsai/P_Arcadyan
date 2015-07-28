@@ -33,6 +33,16 @@ public:
 	inline void setDisplay(bool bValue = true)
 	{
 		_bIsDisplay = bValue;
+
+#ifdef TIMEOUT_MODE
+		if(bValue)
+		{
+			_bStartTimer = true;
+			_fDebugTimer = cTAKE_PHOTO_TIMEOUT;
+		}
+#endif // TIMEOUT_MODE
+
+
 	}
 	inline void setCanMove(bool bValue = true)
 	{
@@ -78,6 +88,15 @@ private:
 ////////////////////////////
 public:
 	ofEvent<string>	_VerticalSliderEvent;
+
+#ifdef TIMEOUT_MODE
+//-------------------------------------------------
+//Debug timer
+//-------------------------------------------------
+private:
+	bool  _bStartTimer;
+	float _fDebugTimer;
+#endif // !TIMEOUT_MODE
 };
 
 #endif // !VERTICAL_IMAGE_SLIDER

@@ -32,7 +32,7 @@ void KinectCtrl::updateKinectCtrl()
 	_bHaveUser = true;
 	
 	ofVec2f Center_(stSkeleton_.aJoints[JointType::JointType_ShoulderLeft].x, stSkeleton_.aJoints[JointType::JointType_Head].y);
-	float fDetectionWidth_ = (stSkeleton_.aJoints[JointType::JointType_ShoulderRight].x - stSkeleton_.aJoints[JointType::JointType_ShoulderLeft].x) * 1.8;
+	float fDetectionWidth_ = (stSkeleton_.aJoints[JointType::JointType_ShoulderRight].x - stSkeleton_.aJoints[JointType::JointType_ShoulderLeft].x) * 2.0;
 	float fDetectcionHeight_ = stSkeleton_.aJoints[JointType::JointType_SpineMid].y - stSkeleton_.aJoints[JointType::JointType_Head].y;
 	Center_.x += fDetectionWidth_/2;
 	Center_.y += fDetectcionHeight_/2;
@@ -112,7 +112,7 @@ void KinectCtrl::setupGesture()
 
 	//Open
 	GestureSegmentList OpenSegmentList_;
-	//OpenSegmentList_.push_back( make_shared<OpenSegment1>() );
+	OpenSegmentList_.push_back( make_shared<OpenSegment1>() );
 	OpenSegmentList_.push_back( make_shared<OpenSegment2>() );
 	OpenSegmentList_.push_back( make_shared<OpenSegment3>() );
 	_GestureMgr.AddGesture(NAME_MANAGER::G_OPEN, OpenSegmentList_);

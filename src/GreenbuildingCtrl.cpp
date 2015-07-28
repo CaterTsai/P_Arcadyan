@@ -16,9 +16,13 @@ void GreenBuildingCtrl::setupGreenBuildingCtrl()
 	_GreenBuildingLight.setLoopState(ofLoopType::OF_LOOP_NORMAL);
 	_GreenBuildingLight.loadMovie("videos/Greenbuilding_nearlight.mov");
 
-	_ArrowLeft.loadImage("images/ArrowLeft.png");
-	_ArrowRight.loadImage("images/ArrowRight.png");
-
+	_ArrowAlpha.setDuration(1.5);
+	_ArrowAlpha.setRepeatType(AnimRepeat::LOOP_BACK_AND_FORTH);
+	
+	//_ArrowLeft.loadImage("images/ArrowLeft.png");
+	//_ArrowRight.loadImage("images/ArrowRight.png");
+	_Arrow.loadImage("images/greenBuildingArrow.png");
+	_ArrowLight.loadImage("images/greenBuildingArrow_Light.png");
 
 	_ExitRect.set(1680, 936, 206, 126);
 	_fExitCounter = cGREEN_BUILDING_EXIT_TIME;
@@ -29,6 +33,11 @@ void GreenBuildingCtrl::setupGreenBuildingCtrl()
 	_bIsStart = false;
 	_bIsRotate = false;
 	_bFlip = false;
+
+#ifdef TIMEOUT_MODE
+	_bStartTimer = false;
+#endif // TIMEOUT_MODE
+
 }
 
 //--------------------------------------------------------------
@@ -41,6 +50,8 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	_GreenBuilding.update();
 	_GreenBuildingLoop.update();
 	_GreenBuildingLight.update();
+
+	_ArrowAlpha.update(fDelta);
 
 	if(!_bFlip)
 	{
@@ -81,6 +92,23 @@ void GreenBuildingCtrl::updateGreenBuildingCtrl(float fDelta, ofPoint CtrlPos)
 	{
 		this->stopRotate();
 	}
+
+#ifdef TIMEOUT_MODE
+	if(_bStartTimer)
+	{
+		_fDebugTimer -= fDelta;
+		if(_fDebugTimer < 0.0)
+		{
+			this->stopRotate();
+			bool bValue_ = true;
+			ofNotifyEvent(_GreenBuildingEvent, bValue_);
+
+			_bStartTimer = false;
+		}
+	}
+#endif // TIMEOUT_MODE
+
+
 }
 
 //--------------------------------------------------------------
@@ -108,8 +136,12 @@ void GreenBuildingCtrl::drawGreenBuildingCtrl()
 		this->drawImage();
 
 		//UI
-		_ArrowLeft.draw(WINDOW_WIDTH/6 - _ArrowRight.width/2, 735 - _ArrowLeft.height/2);
-		_ArrowRight.draw((1920 - WINDOW_WIDTH/6) - _ArrowRight.width/2, 735 - _ArrowRight.height/2);
+		_Arrow.draw(0, 0);
+
+		ofSetColor(255, _ArrowAlpha.getCurrentValue());
+		_ArrowLight.draw(0, 0);
+		//_ArrowLeft.draw(WINDOW_WIDTH/6 - _ArrowRight.width/2, 735 - _ArrowLeft.height/2);
+		//_ArrowRight.draw((1920 - WINDOW_WIDTH/6) - _ArrowRight.width/2, 735 - _ArrowRight.height/2);
 
 	}
 	ofPopStyle();
@@ -132,8 +164,13 @@ void GreenBuildingCtrl::startGreenBuidling()
 	_GreenBuilding.setSpeed(0.0);
 	
 	_GreenBuildingLight.play();
-
+	_ArrowAlpha.animateFromTo(0, 255);
 	this->resetImage();
+
+#ifdef TIMEOUT_MODE
+	_bStartTimer = true;
+	_fDebugTimer = cGREEN_OUT_TIMEOUT;
+#endif // TIMEOUT_MODE
 }
 
 //--------------------------------------------------------------

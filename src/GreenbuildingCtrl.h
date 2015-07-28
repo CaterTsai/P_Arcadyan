@@ -90,7 +90,9 @@ private:
 
 private:
 	bool			_bIsRotate;
-	ofImage			_ArrowLeft, _ArrowRight;
+	ofImage			_Arrow, _ArrowLight;
+	//ofImage			_ArrowLeft, _ArrowRight;
+	ofxAnimatableFloat	_ArrowAlpha;
 
 	ofRectangle		_ExitRect;
 	float			_fExitCounter;
@@ -115,6 +117,15 @@ private:
 ////////////////////////////
 public:
 	ofEvent<bool>	_GreenBuildingEvent;
+
+#ifdef TIMEOUT_MODE
+//-------------------------------------------------
+//Debug timer
+//-------------------------------------------------
+private:
+	bool  _bStartTimer;
+	float _fDebugTimer;
+#endif // !TIMEOUT_MODE
 };
 
 #endif // !ARCADYAN_GREEN_BUILDING

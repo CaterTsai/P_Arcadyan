@@ -99,5 +99,16 @@ private:
 public:
 	ofEvent<string>	ArcadyanTheaterEvent;
 
+
+#ifdef TIMEOUT_MODE
+//-------------------------------------------------
+//Debug timer
+//-------------------------------------------------
+private:
+	bool  _bStartTimer;
+	float _fDebugTimer;
+#endif // TIMEOUT_MODE
+
+
 };
 #endif // !ARCADYAN_THEATER

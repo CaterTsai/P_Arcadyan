@@ -62,8 +62,12 @@ void VirticalSlider::setupVirticalSlider(ofRectangle DisplayArea, float fInterva
 	_bCanMove = true;
 	_ImgIndex = 1;
 
-
 	this->setupControl();
+
+#ifdef TIMEOUT_MODE
+	//Debug
+	_bStartTimer = false;
+#endif // TIMEOUT_MODE
 }
 
 //--------------------------------------------------------------
@@ -153,6 +157,20 @@ void VirticalSlider::updateVirticalSlider(float fDelta, ofRectangle& CtrlArea)
 		string strMsg_ = "takePicture";
 		ofNotifyEvent(_VerticalSliderEvent, strMsg_);
 	}
+
+#ifdef TIMEOUT_MODE
+	if(_bStartTimer)
+	{
+		_fDebugTimer -= fDelta;
+		if(_fDebugTimer < 0.0)
+		{
+			string strMsg_ = "takePicture";
+			ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+
+			_bStartTimer = false;
+		}
+	}
+#endif // TIMEOUT_MODE
 }
 
 //--------------------------------------------------------------

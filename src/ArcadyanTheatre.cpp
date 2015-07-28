@@ -242,6 +242,11 @@ void ArcadyanTheatre::setupTheatre()
 	///////////////////////
 	ofAddListener(ofxTheatreEventArgs::TheatreEvent, this, &ArcadyanTheatre::onTheatreEvent);
 	_Director.Play();
+
+#ifdef TIMEOUT_MODE
+	_bStartTimer = false;
+#endif // TIMEOUT_MODE
+
 }
 
 //--------------------------------------------------------------
@@ -257,11 +262,53 @@ void ArcadyanTheatre::updateTheatre(float fDelta, ofPoint CtrlPos)
 	{
 		this->updateScenesGate(fDelta);
 	}
+	else if(strScenesName_ == NAME_MANAGER::S_GreenBuilding)
+	{
+#ifdef TIMEOUT_MODE
+		if(_bStartTimer)
+		{
+			_fDebugTimer -= fDelta;
+			if(_fDebugTimer < 0.0)
+			{
+				this->disableControlEvent(NAME_MANAGER::S_GreenBuilding);
+				this->GreenbuildingZoomIn();
+				_bStartTimer = false;
+			}
+		}
+#endif // TIMEOUT_MODE
+	}
 	else if(strScenesName_ == NAME_MANAGER::S_MainScenes)
 	{
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_Milestone)
 	{
+#ifdef TIMEOUT_MODE
+		if(_bStartTimer)
+		{
+			_fDebugTimer -= fDelta;
+			if(_fDebugTimer < 0.0)
+			{
+				this->disableControlEvent(NAME_MANAGER::S_Milestone);
+				this->MilestoneZoomIn();
+				_bStartTimer = false;
+			}
+		}
+#endif // TIMEOUT_MODE
+	}
+	else if(strScenesName_ == NAME_MANAGER::S_Product)
+	{
+#ifdef TIMEOUT_MODE
+		if(_bStartTimer)
+		{
+			_fDebugTimer -= fDelta;
+			if(_fDebugTimer < 0.0)
+			{
+				_Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
+				this->TheatreAnimInit(NAME_MANAGER::S_TakePicture);
+				_bStartTimer = false;
+			}
+		}
+#endif // TIMEOUT_MODE
 	}
 
 	this->updateCityLoop();
@@ -403,6 +450,12 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 
 		_Director.GetElementPtr(NAME_MANAGER::E_GreenBuildingTips, pVideoElement_);
 		pVideoElement_->StopVideo();
+
+#ifdef TIMEOUT_MODE
+		_bStartTimer = true;
+		_fDebugTimer = cGREEN_IN_TIMEOUT;
+#endif // TIMEOUT_MODE
+
 	}
 	else if(e.strMessage == NAME_MANAGER::E_GreenBuildingZoomIn)
 	{
@@ -421,6 +474,11 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 		pMilestonCountdown_->PlayVideo();
 
 		this->enableControlEvent(NAME_MANAGER::S_Milestone);
+
+#ifdef TIMEOUT_MODE
+		_bStartTimer = true;
+		_fDebugTimer = cMILESTONE_IN_TIMEOUT;
+#endif // TIMEOUT_MODE
 	}
 	else if(e.strMessage == NAME_MANAGER::E_MilestoneZoomIn)
 	{	
@@ -437,6 +495,11 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 	else if(e.strMessage == NAME_MANAGER::E_ProductTips)
 	{	
 		this->enableControlEvent(NAME_MANAGER::S_Product);
+
+#ifdef TIMEOUT_MODE
+		_bStartTimer = true;
+		_fDebugTimer = cPRODUCT_IN_TIMEOUT;
+#endif // TIMEOUT_MODE
 	}
 	else if(e.strMessage == NAME_MANAGER::E_Ending)
 	{
@@ -475,7 +538,6 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 		string strEventMsg_ = NAME_MANAGER::T_TakePictureIsReady;
 		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
 
-		this->enableControlEvent(NAME_MANAGER::S_TakePicture);
 	}
 	else if(e.strMessage == NAME_MANAGER::ANIM_PhotoFrameFadeOut)
 	{

@@ -113,7 +113,7 @@ void TextCurveSlider::drawCurveSlider()
 
 				ofPushMatrix();
 				ofTranslate(Pos_);
-				ofRotateY(fRotate_);
+				ofRotateY(60);
 				ofSetColor(255, 255, 255, RIter_->fAlpha);
 				
 				RIter_->TextImg.draw(	-RIter_->TextImg.width/2 + RIter_->Offset.x,
@@ -250,7 +250,7 @@ void TextCurveSlider::setCurveSliderPath(ofPoint StartPos, ofPoint EndPos, ofPoi
 	double dT_ = 0.0;
 	for(int idx_ = 0; idx_ < iResolution; idx_++)
 	{
-		_stTEXT_CURVE	TmpCurve_;
+		stTEXT_CURVE	TmpCurve_;
 
 		dT_ = dUnitT_ * idx_;
 		TmpCurve_.IsDisplay = true;
@@ -378,7 +378,8 @@ void TextCurveSlider::RotateToForward()
 		
 		this->getPosition(_IterRotate->fAnimDuraction.getCurrentValue(), _RegisterPos, _RegisterRotate);
 		
-		_AnimRotate.animateFromTo(_RegisterRotate, 90);
+		//_AnimRotate.animateFromTo(_RegisterRotate, 90);
+		_AnimRotate.animateFromTo(60, 90);
 		_AnimForward.setPosition(_RegisterPos);
 		_AnimForward.animateTo(ofPoint(_RegisterPos.x, _RegisterPos.y, cFORWARD_Z));
 
@@ -397,7 +398,8 @@ void TextCurveSlider::RotateToBackward()
 
 	if(_eRotateState == eTEXT_CAN_GOBACK)
 	{
-		_AnimRotate.animateFromTo(90, _RegisterRotate);
+		//_AnimRotate.animateFromTo(90, _RegisterRotate);
+		_AnimRotate.animateFromTo(90, 60);
 		_AnimForward.animateTo(_RegisterPos);
 		_eRotateState = eTEXT_ROTATE_TO_BACKWARD;
 	}

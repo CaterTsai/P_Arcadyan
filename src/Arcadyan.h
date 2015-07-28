@@ -1,5 +1,8 @@
 #pragma once
 
+#include <thread>
+#include <mutex>
+
 #include "protocol.h"
 #include "VideoManager.h"
 #include "ofGstVideoPlayer.h"
@@ -11,6 +14,7 @@
 #include "VerticalImageSlider.h"
 #include "GreenbuildingCtrl.h"
 #include "KinectCtrl.h"
+
 #include "TimelineTrigger.h"
 #include "SubtitleCreater.h"
 #include "AudioMgr.h"
@@ -164,4 +168,21 @@ private:
 //-------------------------------------------------
 private:
 	void setupAudioMgr();
+
+#ifdef TIMEOUT_MODE
+//-------------------------------------------------
+//Debug timer
+//-------------------------------------------------
+private:
+	bool  _bStartTimer;
+	float _fDebugTimer;
+#endif // !TIMEOUT_MODE
+
+#ifdef MEM_CHECK
+//-------------------------------------------------
+//Debug memcheck
+//-------------------------------------------------
+private:
+	_CrtMemState _Start, _End;
+#endif MEM_CHECK
 };

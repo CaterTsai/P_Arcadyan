@@ -4,23 +4,37 @@
 //--------------------------------------------------------------
 void Arcadyan::setup()
 {
-	ofBackground(255);
+	//_CrtSetBreakAlloc(41211);
+	ofBackground(0);
 	ofSetVerticalSync(true);
-	
+
+	ofLogToFile(ofGetTimestampString("Log_%m%d.txt"), true);
+
+	//----------------------------------
 	//Video Manager
-	_bVideoIsStart = false;
 	this->InitialVideoManager();
+	
+	//GB Ctrl
+	_bStartMove = false;
+	_GreenBuildingCtrl.setupGreenBuildingCtrl();
+	ofAddListener(_GreenBuildingCtrl._GreenBuildingEvent, this, &Arcadyan::onGreenBuildingExit);
+	
+	//Theatre
+	_Arcadyan.setupTheatre();
+	ofAddListener(_Arcadyan.ArcadyanTheaterEvent, this, &Arcadyan::onArcadyanTheaterEvent);
+
+	//Kinect Ctrl
+	this->KinectCtrlSetup();
+
+	//Audio & BGM
+	this->setupAudioMgr();
+	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
 
 	//Timeline Subtitle
 	this->InitialSubtitle("xml/_SubtitleData.xml");
 
 	//Image Slider
 	this->InitialImageSlider();
-
-	//GB Ctrl
-	_bStartMove = false;
-	_GreenBuildingCtrl.setupGreenBuildingCtrl();
-	ofAddListener(_GreenBuildingCtrl._GreenBuildingEvent, this, &Arcadyan::onGreenBuildingExit);
 
 	//Text Slider
 	this->InitialTextSlider();
@@ -31,30 +45,32 @@ void Arcadyan::setup()
 	_PhotoFrameSlider.setupVirticalSlider(ofRectangle(0, 0, 1024, 250), (cSMALL_PHOTO_WIDTH * cSMALL_PHOTO_SCALE) + 90);
 	ofAddListener(_PhotoFrameSlider._VerticalSliderEvent, this, &Arcadyan::onPhotoFrameChange);
 
-	//Theatre
-	_Arcadyan.setupTheatre();
-	ofAddListener(_Arcadyan.ArcadyanTheaterEvent, this, &Arcadyan::onArcadyanTheaterEvent);
-
-	//Kinect Ctrl
-	this->KinectCtrlSetup();
-
 	//Info Display
 	_InfoDisplay.setupInfoDisplay();
 	_InfoDisplay.getNowWeatherInfo();
 	ofAddListener(_InfoDisplay.FinishEvent, this, &Arcadyan::onInfoDisplay);
-
-	//Audio & BGM
-	this->setupAudioMgr();
-	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
-
+	//----------------------------------
+	
 	_VideoMgr.play();
 	_SubtitleMgr.start();
 
 	//Timer
 	_fMainTimer = ofGetElapsedTimef();
 
-	ofToggleFullscreen();
+#ifdef TIMEOUT_MODE
+	//Debug
+	_bStartTimer = true;
+	_fDebugTimer = cSHAKE_TIMEOUT;
+#endif // TIMEOUT_MODE
+
+	//ofToggleFullscreen();
 	ofHideCursor();
+
+#ifdef MEM_CHECK
+	_CrtMemCheckpoint( &_Start );
+	_CrtMemDumpStatistics( &_Start );
+
+#endif //MEM_CHECK
 }
 
 //--------------------------------------------------------------
@@ -79,6 +95,49 @@ void Arcadyan::update()
 				_VideoMgr.next();
 			}
 		}
+
+#ifdef TIMEOUT_MODE
+		//Debug
+		if(_bStartTimer)
+		{
+			_fDebugTimer -= fDelta_;
+			if(_fDebugTimer < 0.0)
+			{
+				_VideoMgr.next();
+
+				//BGM change
+				AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_INTRO);
+
+				ofxVideoElement*	pVideoElement_;
+				_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_OpenTips, pVideoElement_);
+				pVideoElement_->StopVideo();
+
+				_KinectCtrl.stopGesutreCheck();
+
+				_bStartTimer = false;
+			}
+		}
+#endif // TIMEOUT_MODE
+	}
+	else if(strScenesName_ == NAME_MANAGER::S_Gate)
+	{
+#ifdef TIMEOUT_MODE
+		//Debug
+		if(_bStartTimer)
+		{
+			_fDebugTimer -= fDelta_;
+			if(_fDebugTimer < 0.0)
+			{
+				_Arcadyan.OpenTheGate();
+				ofxVideoElement*	pVideoElement_;
+				_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_GateOpenTips, pVideoElement_);
+				pVideoElement_->StopVideo();
+				_KinectCtrl.stopGesutreCheck();
+
+				_bStartTimer = false;
+			}
+		}
+#endif // TIMEOUT_MODE
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_MainScenes)
 	{
@@ -286,7 +345,7 @@ void Arcadyan::drawAfterTheatre()
 	else if(strScenesName_ == NAME_MANAGER::S_Milestone)
 	{
 		_TextCurveSlider.drawCurveSlider();
-		_TextCurveSlider.drawTriggerRect();
+		//_TextCurveSlider.drawTriggerRect();
 		if(_DisplayBody)
 		{
 			_KinectCtrl.drawBody(ofPoint(0, WINDOW_HEIGHT - cKINECT_BODY_HEIGHT), cKINECT_BODY_WIDTH, cKINECT_BODY_HEIGHT);
@@ -367,7 +426,6 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 void Arcadyan::resetTheatre()
 {
 	//Video Manager
-	_bVideoIsStart = true;
 	_VideoMgr.stop();
 
 	//Subtitle
@@ -397,6 +455,24 @@ void Arcadyan::resetTheatre()
 	AudioMgr::GetInstance()->playBGM(NAME_MANAGER::BGM_OPEN);
 
 	_bHaveUser = false;
+
+#ifdef MEM_CHECK
+	_CrtMemCheckpoint( &_End );
+	_CrtMemDumpStatistics( &_End );
+	
+	/*_CrtMemState Diff_;
+	if ( _CrtMemDifference( &Diff_, &_Start, &_End) )
+	{
+		_CrtMemDumpStatistics( &Diff_ );
+	}*/
+#endif //MEM_CHECK
+
+#ifdef TIMEOUT_MODE
+	//Debug
+	_bStartTimer = true;
+	_fDebugTimer = cSHAKE_TIMEOUT;
+#endif // TIMEOUT_MODE
+	ofLog(OF_LOG_NOTICE, "[Arcadyan]Restart!!");
 }
 #pragma endregion
 
@@ -451,11 +527,9 @@ void Arcadyan::KinectCtrlUpdate()
 	{
 		if(strScenesName_ == NAME_MANAGER::S_Open)
 		{	
-			if(!_bVideoIsStart)
-			{
-				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadein);
-				_KinectCtrl.startGestureCheck(NAME_MANAGER::G_WAVE_HAND);
-			}
+			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadein);
+			_KinectCtrl.startGestureCheck(NAME_MANAGER::G_WAVE_HAND);
+
 		}
 		else if(strScenesName_ == NAME_MANAGER::S_Gate)
 		{
@@ -467,10 +541,8 @@ void Arcadyan::KinectCtrlUpdate()
 	{
 		if(strScenesName_ == NAME_MANAGER::S_Open)
 		{	
-			if(!_bVideoIsStart)
-			{
-				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadeout);
-			}
+			_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_SwingTipsFadeout);
+
 		}
 
 		_KinectCtrl.stopGesutreCheck();
@@ -622,6 +694,13 @@ void Arcadyan::onVideoEvent(string& e)
 
 		//Kinect gesture check
 		_KinectCtrl.startGestureCheck(NAME_MANAGER::G_OPEN);
+
+#ifdef TIMEOUT_MODE
+		//Debug
+		_bStartTimer = true;
+		_fDebugTimer = cOPEN_TIMEOUT;
+#endif // TIMEOUT_MODE
+
 	}
 	else if(e == "V_IntroLoop")
 	{
@@ -649,7 +728,7 @@ void Arcadyan::InitialImageSlider()
 void Arcadyan::InitialTextSlider()
 {
 	_TextCurveSlider.setupContanct();
-	_TextCurveSlider.setCurveSliderData("xml/_TextSliderData.xml", 10, 2);
+	_TextCurveSlider.setCurveSliderData("xml/_TextSliderData.xml", 10, 4);
 	_TextCurveSlider.setCurveSliderPath(
 		ofPoint(0, 0, 1000)
 		,ofPoint(0, 0, -5000)

@@ -269,8 +269,14 @@ void InfoDisplay::initDisplay()
 	_FontMS40.loadFont("fonts/msjhbd.ttf", 40);
 
 	//shader
-	_Shadow.load("", "shader/shadow.frag");
-	_Blur.load("", "shader/GaussianBlur.frag");
+	if(!_Shadow.load("", "shader/shadow.frag"))
+	{
+		ofLog(OF_LOG_WARNING, "[InfoDisplay] Loading shadow shader failed");
+	}
+	if(!_Blur.load("", "shader/GaussianBlur.frag"))
+	{
+		ofLog(OF_LOG_WARNING, "[InfoDisplay] Loading blur shader failed");
+	}
 
 	ofImage Img_;
 	Img_.loadImage("images/weather/w_partly_cloudy.png");

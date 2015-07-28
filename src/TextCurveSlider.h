@@ -33,8 +33,8 @@ typedef struct _stTEXT_CURVE_ELEMENT
 		fAnimDuraction.update(fDelta);
 		fAnimAlpha.update(fDelta);
 		fAlpha = cBASE_ALPHA + fAnimAlpha.getCurrentValue();
-
-		if(fAlpha == cBASE_ALPHA && fAnimDuraction.getCurrentValue() > 0.6)
+		float fDuraction_ = fAnimDuraction.getCurrentValue();
+		if(fAlpha == cBASE_ALPHA && fDuraction_ > 0.4 && fDuraction_ <= 0.65)
 		{
 			fAnimAlpha.animateFromTo(0, 255 - cBASE_ALPHA);
 		}
