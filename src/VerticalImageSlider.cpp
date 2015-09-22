@@ -7,7 +7,7 @@ void VirticalSlider::setupVirticalSlider(ofRectangle DisplayArea, float fInterva
 
 	//Load the image
 	ofDirectory	Dir_("images/Photoframe/");
-	Dir_.allowExt("png");
+	Dir_.allowExt("jpg");
 	Dir_.listDir();
 
 	for(int idx_ = 0; idx_ < Dir_.numFiles(); ++idx_)
@@ -294,7 +294,7 @@ void VirticalSlider::setupControl()
 
 	_LeftArea.setFromCenter(ofPoint(409, 823), _ArrowLeft.width, _ArrowLeft.height);
 	_RightArea.setFromCenter(ofPoint(1527, 823), _ArrowRight.width, _ArrowRight.height);
-	_CameraArea.setFromCenter(ofPoint(1635, 558), _Camera.width, _Camera.height);
+	_CameraArea.setFromCenter(ofPoint(1539, 505), _Camera.width, _Camera.height);
 }
 
 //--------------------------------------------------------------

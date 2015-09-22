@@ -4,8 +4,8 @@
 #include "protocol.h"
 #include "ofxAnimatableFloat.h"
 
-static const int cSMALL_PHOTO_WIDTH = 324;
-static const int cSMALL_PHOTO_HEIGHT = 186;
+static const int cSMALL_PHOTO_WIDTH = 290;
+static const int cSMALL_PHOTO_HEIGHT = 187;
 static const float cSMALL_PHOTO_SCALE = 0.69;
 
 typedef struct _stSLIDER_UNIT
@@ -41,9 +41,8 @@ public:
 			_fDebugTimer = cTAKE_PHOTO_TIMEOUT;
 		}
 #endif // TIMEOUT_MODE
-
-
 	}
+
 	inline void setCanMove(bool bValue = true)
 	{
 		_bCanMove = bValue;

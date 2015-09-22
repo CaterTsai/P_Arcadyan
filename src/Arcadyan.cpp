@@ -8,7 +8,7 @@ void Arcadyan::setup()
 	ofBackground(0);
 	ofSetVerticalSync(true);
 
-	ofLogToFile(ofGetTimestampString("Log_%m%d.txt"), true);
+	//ofLogToFile(ofGetTimestampString("Log_%m%d.txt"), true);
 
 	//----------------------------------
 	//Video Manager
@@ -775,8 +775,8 @@ void Arcadyan::takePicture()
 		ofPushStyle();
 		ofSetColor(255);
 
-		Photo_.draw(0, 0);		
 		PhotoFrame_.draw(0, 0);
+		Photo_.draw(cPHOTO_FRAME_KINECT_RECT);		
 		ofPopStyle();
 	}
 	Canvas_.end();

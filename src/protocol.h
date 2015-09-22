@@ -1,8 +1,8 @@
 #ifndef _ARCADYAN_PROTOCOL_
 #define _ARCADYAN_PROTOCOL_
 
-#define TIMEOUT_MODE
-#define MEM_CHECK
+//#define TIMEOUT_MODE
+//#define MEM_CHECK
 
 #include "ofMain.h"
 #include "NameManager.h"
@@ -39,26 +39,29 @@ static const float SUBTITLE_FONT_SIZE = 60;
 #define uint16 unsigned short
 
 //Const pamerater
-const int NUMBER_OF_JOINT = 15;
-const int KINECT_DEPTH_WIDTH = 640;
-const int KINECT_DEPTH_HEIGHT = 480;
+static const int NUMBER_OF_JOINT = 15;
+static const int KINECT_DEPTH_WIDTH = 640;
+static const int KINECT_DEPTH_HEIGHT = 480;
 
-const float BASE_CHECK_TIME = 0.15;
-const float SUCCESS_CHECK_TIMER = 0.08;
-const int PAUSE_COUNTER_LIMT = 20;
+static const float BASE_CHECK_TIME = 0.15;
+static const float SUCCESS_CHECK_TIMER = 0.08;
+static const int PAUSE_COUNTER_LIMT = 20;
 
-const float cGREEN_BUILDING_EXIT_TIME = 1.5;
+static const float cGREEN_BUILDING_EXIT_TIME = 1.5;
 
-const float cKINECT_BODY_WIDTH = 205;
-const float cKINECT_BODY_HEIGHT = 170;
+static const float cKINECT_BODY_WIDTH = 205;
+static const float cKINECT_BODY_HEIGHT = 170;
 
 //-------------------------------
-const float cSHAKE_TIMEOUT	= 10;
-const float cOPEN_TIMEOUT	= 5;
-const float cGREEN_IN_TIMEOUT =  5;
-const float cGREEN_OUT_TIMEOUT = 10;
-const float cMILESTONE_IN_TIMEOUT = 5;
-const float cPRODUCT_IN_TIMEOUT = 5;
-const float cTAKE_PHOTO_TIMEOUT = 5;
+static const float cSHAKE_TIMEOUT	= 10;
+static const float cOPEN_TIMEOUT	= 5;
+static const float cGREEN_IN_TIMEOUT =  5;
+static const float cGREEN_OUT_TIMEOUT = 10;
+static const float cMILESTONE_IN_TIMEOUT = 5;
+static const float cPRODUCT_IN_TIMEOUT = 5;
+static const float cTAKE_PHOTO_TIMEOUT = 5;
+
+static const ofRectangle cPHOTO_FRAME_KINECT_RECT = ofRectangle(40, 586, 1030, 581);
+
 
 #endif // !_ARCADYAN_PROTOCOL_

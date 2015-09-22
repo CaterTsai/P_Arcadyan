@@ -21,7 +21,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(S_MainScenes);
 	CREATE_VALUE(S_GreenBuilding)
 	CREATE_VALUE(S_Milestone);
-	CREATE_VALUE(S_Product);
+	CREATE_VALUE(S_ProductAndFactory);
 	CREATE_VALUE(S_TakePicture);
 
 ///////////////////////////////////////
@@ -45,6 +45,9 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_MilestoneVideoLoop);
 	CREATE_VALUE(A_MilestoneNearBG);
 	CREATE_VALUE(A_ProductTips);
+	CREATE_VALUE(A_ProductAndFactoryIntro);
+	CREATE_VALUE(A_FactoryBG);
+
 	CREATE_VALUE(A_PictureTips);
 	CREATE_VALUE(A_PictureBackplane);
 	CREATE_VALUE(A_ChoosePhotoframeText);
@@ -68,6 +71,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(P_MilestoneNearBG);
 	CREATE_VALUE(P_MilestoneBG);
 	CREATE_VALUE(P_MilestoneUI); 
+	CREATE_VALUE(P_FactoryBG);
 	CREATE_VALUE(P_ProductBG);
 	CREATE_VALUE(P_ProductUI);
 	CREATE_VALUE(P_TakePictureBG);
@@ -78,18 +82,27 @@ namespace NAME_MANAGER
 ///////////////////////////////////////
 // Element
 //////////////////////////////////////
+	//Open
 	CREATE_VALUE(E_OpenTips);
 	CREATE_VALUE(E_OpenWordTips);
+	
+	//Gate
 	CREATE_VALUE(E_GateBG);
 	CREATE_VALUE(E_GateOpenVideo);
 	CREATE_VALUE(E_GateOpenTips)	
+	
+	//Main Scenes
 	CREATE_VALUE(E_MainScenesBG);
 	CREATE_VALUE(E_MainScenesGlass);
+	
+	//Green Building
 	CREATE_VALUE(E_GreenBuildingBG);
 	CREATE_VALUE(E_GreenBuildingGlass);
 	CREATE_VALUE(E_GreenBuildingLight);
 	CREATE_VALUE(E_GreenBuildingTips);
 	CREATE_VALUE(E_GreenBuildingZoomIn);
+	
+	//Milestone
 	CREATE_VALUE(E_MilestoneBG);
 	CREATE_VALUE(E_MilestoneGlass);
 	CREATE_VALUE(E_MilestoneBlackGlass);
@@ -98,9 +111,15 @@ namespace NAME_MANAGER
 	CREATE_VALUE(E_MilestoneZoomIn);
 	CREATE_VALUE(E_MilestoneVideoLoop);
 	CREATE_VALUE(E_MilestoneNearBG);
+	
+	//Product & Factory
 	CREATE_VALUE(E_ProductBG);
 	CREATE_VALUE(E_ProductGlass);
 	CREATE_VALUE(E_ProductTips);
+	CREATE_VALUE(E_ProductVideoAndFactoryIntro);
+	CREATE_VALUE(E_FactoryBG);
+
+	//Take Picture
 	CREATE_VALUE(E_TakePictureBG);
 	CREATE_VALUE(E_TakePictureGlass);
 	CREATE_VALUE(E_TakePictureTips);
@@ -145,6 +164,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(T_DoorIsOpen);
 	CREATE_VALUE(T_Greenbuilding_Show);
 	CREATE_VALUE(T_PlayMilestone);
+	CREATE_VALUE(T_StartFactory);
 	CREATE_VALUE(T_TakePictureIsReady);
 	CREATE_VALUE(T_ChangePhotoFrame);
 	CREATE_VALUE(T_TakePhoto);
