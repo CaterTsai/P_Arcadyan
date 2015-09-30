@@ -48,6 +48,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(A_ProductAndFactoryIntro);
 	CREATE_VALUE(A_FactoryBG);
 
+	CREATE_VALUE(A_PictureBG);
 	CREATE_VALUE(A_PictureTips);
 	CREATE_VALUE(A_PictureBackplane);
 	CREATE_VALUE(A_ChoosePhotoframeText);
@@ -148,6 +149,8 @@ namespace NAME_MANAGER
 
 	CREATE_VALUE(ANIM_GreenBuildingLightFadeIn);
 	CREATE_VALUE(ANIM_MilstoneZoomInFadeOut);
+	CREATE_VALUE(ANIM_FactoryArmEnter);
+
 	CREATE_VALUE(ANIM_TakePictureTipsFadeIn);
 	CREATE_VALUE(ANIM_TakePictureTipsFadeOut);
 	CREATE_VALUE(ANIM_TakePictureFadeIn);
@@ -164,6 +167,7 @@ namespace NAME_MANAGER
 	CREATE_VALUE(T_DoorIsOpen);
 	CREATE_VALUE(T_Greenbuilding_Show);
 	CREATE_VALUE(T_PlayMilestone);
+	CREATE_VALUE(T_EnterArm);
 	CREATE_VALUE(T_StartFactory);
 	CREATE_VALUE(T_TakePictureIsReady);
 	CREATE_VALUE(T_ChangePhotoFrame);
@@ -178,6 +182,11 @@ namespace NAME_MANAGER
 	CREATE_VALUE(C_Milestone);
 	CREATE_VALUE(C_Product);
 
+//-------------------------------------------------
+//Factory
+//-------------------------------------------------
+	CREATE_VALUE(F_CloseCtrl);
+	CREATE_VALUE(F_GameFinish);
 //-------------------------------------------------
 //Gesture
 //-------------------------------------------------

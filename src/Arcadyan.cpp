@@ -19,6 +19,10 @@ void Arcadyan::setup()
 	_GreenBuildingCtrl.setupGreenBuildingCtrl();
 	ofAddListener(_GreenBuildingCtrl._GreenBuildingEvent, this, &Arcadyan::onGreenBuildingExit);
 	
+	//Factory Game
+	_FactoryGame.setup();
+	ofAddListener(_FactoryGame._FactoryEvent, this, &Arcadyan::onFactoryEvent);
+
 	//Theatre
 	_Arcadyan.setupTheatre();
 	ofAddListener(_Arcadyan.ArcadyanTheaterEvent, this, &Arcadyan::onArcadyanTheaterEvent);
@@ -151,6 +155,10 @@ void Arcadyan::update()
 	{
 		_TextCurveSlider.updateCurveSlider(fDelta_, _CtrlArea);
 	}
+	else if(strScenesName_ == NAME_MANAGER::S_ProductAndFactory)
+	{
+		_FactoryGame.update(fDelta_, _CtrlArea.position);
+	}
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
 		_PhotoFrameSlider.updateVirticalSlider(fDelta_, _CtrlArea);
@@ -205,6 +213,13 @@ void Arcadyan::keyPressed(int key)
 {
 	switch(key)
 	{
+	case 'c':
+		{
+			_FactoryGame.nextStep();
+			_FactoryGame.exitItems();
+			_FactoryGame.hideInfo();
+			break;
+		}
 	case 'b':
 		{
 			_DisplayBody ^= true;
@@ -254,32 +269,7 @@ void Arcadyan::keyPressed(int key)
 			ofToggleFullscreen();
 		}
 		break;
-	case 'r':
-		{
-			if(_PhotoFrameSlider.toRight())
-			{
-				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
-			}			
-		}
-		break;
-	case 'l':
-		{
-			if(_PhotoFrameSlider.toLeft())
-			{
-				_Arcadyan.TheatreAnimInit(NAME_MANAGER::INIT_PhotoFrameChange);
-			}
-		}
-		break;
-	case '1':
-		{
-			_TextCurveSlider.RotateToForward();
-		}
-		break;
-	case '2':
-		{
-			_TextCurveSlider.RotateToBackward();
-		}
-		break;
+
 	case '0':
 		{
 			this->resetTheatre();
@@ -351,6 +341,10 @@ void Arcadyan::drawAfterTheatre()
 			_KinectCtrl.drawBody(ofPoint(0, WINDOW_HEIGHT - cKINECT_BODY_HEIGHT), cKINECT_BODY_WIDTH, cKINECT_BODY_HEIGHT);
 		}
 	}
+	else if(strScenesName_ == NAME_MANAGER::S_ProductAndFactory)
+	{
+		_FactoryGame.draw();
+	}
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
 		_PhotoFrameSlider.drawVirticalSlider(448, 703);
@@ -377,6 +371,15 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 		_TextCurveSlider.startCurveSlider();
 		this->setCtrlDisplay(true);
 		//_KinectCtrl.startGestureCheck(NAME_MANAGER::G_HAND_UP);
+	}
+	else if(e == NAME_MANAGER::T_EnterArm)
+	{
+		_FactoryGame.enterArm();
+	}
+	else if(e == NAME_MANAGER::T_StartFactory)
+	{
+		_FactoryGame.start();
+		setCtrlDisplay(true);
 	}
 	else if(e == NAME_MANAGER::T_TakePictureIsReady)
 	{
@@ -852,6 +855,38 @@ void Arcadyan::onGreenBuildingExit(bool& e)
 	}
 }
 #pragma endregion
+
+#pragma region Factory Game
+//--------------------------------------------------------------
+void Arcadyan::onFactoryEvent(string& e)
+{
+	if(_Arcadyan._Director.GetNowScenes()->GetScenesName() != NAME_MANAGER::S_ProductAndFactory)
+	{
+		return;
+	}
+
+	if(e == NAME_MANAGER::F_CloseCtrl)
+	{
+		this->setCtrlDisplay(false);
+	}
+	else if(e == NAME_MANAGER::F_GameFinish)
+	{
+		ofImage screen_;
+		screen_.grabScreen(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+		_FactoryGame.stop();
+
+		ofxDynamicImageElement* pBG_ = nullptr;
+		if(_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_TakePictureBG, pBG_))
+		{
+			pBG_->updateImg(screen_);
+		}		
+		
+		_Arcadyan._Director.TransitTo(eTransitionsType::eTRANSITION_NONE);
+		_Arcadyan.TheatreAnimInit(NAME_MANAGER::S_TakePicture);
+	}
+}
+#pragma endregion
+
 
 #pragma region Audio & BGM
 //--------------------------------------------------------------

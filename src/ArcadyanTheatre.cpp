@@ -53,8 +53,8 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_ProductAndFactoryIntro, "videos/product_2_factoryIntro.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer)));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_FactoryBG, "images/factory_bg.png"));
 	
-
 	//S_TakePicture
+	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PictureBG));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_PictureTips, "images/PictureTips.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_PictureBackplane, "images/PicturePlane.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_ChoosePhotoframeText, "images/PhotoText_1.png", eBLEND_ALPHA));
@@ -147,8 +147,9 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddElement(NAME_MANAGER::E_FactoryBG, NAME_MANAGER::P_FactoryBG, NAME_MANAGER::A_FactoryBG, 0, ofPoint(0), false);
 	
 	//S_TakePicture
-	_Director.AddElement(NAME_MANAGER::E_TakePictureBG, NAME_MANAGER::P_TakePictureBG, NAME_MANAGER::A_MainScenesBG, 0);
-	_Director.AddElement(NAME_MANAGER::E_TakePictureGlass, NAME_MANAGER::P_TakePictureBG, NAME_MANAGER::A_MainScenesGlass, 1);
+	//_Director.AddElement(NAME_MANAGER::E_TakePictureBG, NAME_MANAGER::P_TakePictureBG, NAME_MANAGER::A_MainScenesBG, 0);
+	//_Director.AddElement(NAME_MANAGER::E_TakePictureGlass, NAME_MANAGER::P_TakePictureBG, NAME_MANAGER::A_MainScenesGlass, 1);
+	_Director.AddElement(NAME_MANAGER::E_TakePictureBG, NAME_MANAGER::P_TakePictureBG, NAME_MANAGER::A_PictureBG, 0);
 	_Director.AddElement(NAME_MANAGER::E_TakePictureTips, NAME_MANAGER::P_TakePictureTips, NAME_MANAGER::A_PictureTips, 10, ofPoint(0), false);
 	_Director.AddElement(NAME_MANAGER::E_TakePictureBackplane, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_PictureBackplane, 0, ofPoint(53, 67));
 	_Director.AddElement(NAME_MANAGER::E_ChoosePhotoframeText, NAME_MANAGER::P_TakePictureUI, NAME_MANAGER::A_ChoosePhotoframeText, 1, ofPoint(1497, 222));
@@ -265,7 +266,7 @@ void ArcadyanTheatre::setupTheatre()
 void ArcadyanTheatre::updateTheatre(float fDelta, ofPoint CtrlPos)
 {
 	string strScenesName_ = _Director.GetNowScenes()->GetScenesName();
-
+	int iFrame_ = 0;
 	if(strScenesName_ == NAME_MANAGER::S_Open)
 	{
 
@@ -309,6 +310,10 @@ void ArcadyanTheatre::updateTheatre(float fDelta, ofPoint CtrlPos)
 	}
 	else if(strScenesName_ == NAME_MANAGER::S_ProductAndFactory)
 	{
+		ofxVideoElement* pVideo_ = nullptr;
+		_Director.GetElementPtr(NAME_MANAGER::E_ProductVideoAndFactoryIntro, pVideo_);
+		iFrame_ = pVideo_->GetFrame();
+
 #ifdef TIMEOUT_MODE
 		if(_bStartTimer)
 		{
@@ -325,7 +330,7 @@ void ArcadyanTheatre::updateTheatre(float fDelta, ofPoint CtrlPos)
 
 	this->updateCityLoop();
 	this->updateControlEvent(CtrlPos);
-	_Director.update();
+	_Director.update(iFrame_);
 }
 
 //--------------------------------------------------------------
@@ -387,6 +392,11 @@ void ArcadyanTheatre::TheatreAnimInit(string strScenes)
 		_Director.GetPlanePtr(NAME_MANAGER::P_MilestoneUI, pPlanePtr_);
 		_Director.AddAnimation(NAME_MANAGER::S_Milestone, 0, new ofxFadeOutAnimation(NAME_MANAGER::ANIM_MilstoneZoomInFadeOut, pPlanePtr_, 0.3, 0.0, 0.0));
 	}
+	else if(strScenes == NAME_MANAGER::S_ProductAndFactory)
+	{
+		_Director.GetElementPtr(NAME_MANAGER::E_ProductVideoAndFactoryIntro, pElementPtr_);
+		_Director.AddVideoAnimation(NAME_MANAGER::S_ProductAndFactory,  new ofxEmptyAnimation(NAME_MANAGER::ANIM_FactoryArmEnter, pElementPtr_, 1700, 0.0));
+	}
 	else if(strScenes == NAME_MANAGER::S_TakePicture)
 	{
 		_Director.GetElementPtr(NAME_MANAGER::E_TakePictureTips, pElementPtr_);
@@ -440,6 +450,7 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 	}
 	else if(e.strMessage == NAME_MANAGER::S_ProductAndFactory)
 	{
+		this->TheatreAnimInit(NAME_MANAGER::S_ProductAndFactory);
 		this->playCityLoop();
 	}
 	
@@ -529,6 +540,9 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 
 		_Director.GetPlanePtr(NAME_MANAGER::P_ProductUI, pPlane_);
 		pPlane_->SetVisible(false);
+
+		string strEventMsg_ = NAME_MANAGER::T_StartFactory;
+		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
 	}
 	else if(e.strMessage == NAME_MANAGER::E_Ending)
 	{
@@ -562,11 +576,15 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 		_Director.GetPlanePtr(NAME_MANAGER::P_MilestoneUI, pPlane_);
 		pPlane_->SetVisible(false);
 	}
+	else if(e.strMessage == NAME_MANAGER::ANIM_FactoryArmEnter)
+	{
+		string strEventMsg_ = NAME_MANAGER::T_EnterArm;
+		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
+	}
 	else if(e.strMessage == NAME_MANAGER::ANIM_TakePictureFadeIn)
 	{
 		string strEventMsg_ = NAME_MANAGER::T_TakePictureIsReady;
 		ofNotifyEvent(ArcadyanTheaterEvent, strEventMsg_, this);
-
 	}
 	else if(e.strMessage == NAME_MANAGER::ANIM_PhotoFrameFadeOut)
 	{

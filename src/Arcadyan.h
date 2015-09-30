@@ -13,6 +13,7 @@
 #include "ImageSlider.h"
 #include "VerticalImageSlider.h"
 #include "GreenbuildingCtrl.h"
+#include "FactoryGame.h"
 #include "KinectCtrl.h"
 
 #include "TimelineTrigger.h"
@@ -162,6 +163,14 @@ public:
 private:
 	bool				_bStartMove;
 	GreenBuildingCtrl	_GreenBuildingCtrl;
+
+//-------------------------------------------------
+//Factory Game
+//-------------------------------------------------
+public:
+	void onFactoryEvent(string& e);
+private:
+	FactoryGame		_FactoryGame;
 
 //-------------------------------------------------
 //Audio & BGM

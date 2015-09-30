@@ -9,6 +9,10 @@
 
 #include <stdlib.h>
 #include <crtdbg.h>
+#include <algorithm>
+#include <random>
+#include <array>
+#include <chrono>
 
 #define _CRTDBG_MAP_ALLOC
 #ifdef _DEBUG
@@ -63,5 +67,6 @@ static const float cTAKE_PHOTO_TIMEOUT = 5;
 
 static const ofRectangle cPHOTO_FRAME_KINECT_RECT = ofRectangle(40, 586, 1030, 581);
 
-
+static const int cFACTORY_ITEMS_NUM = 4;
+static const float cFACTORY_ITEMS_MOVE_DIST = 588;
 #endif // !_ARCADYAN_PROTOCOL_

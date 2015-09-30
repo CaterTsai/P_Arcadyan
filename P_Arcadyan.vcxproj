@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{7FD42DF7-442E-479A-BA76-D0022F99702A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>P_Arcadyan</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_debug</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <GenerateManifest>true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>bin\</OutDir>
+    <IntDir>obj\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <AdditionalIncludeDirectories>$(KINECTSDK20_DIR)\inc;%(AdditionalIncludeDirectories);..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxAnimatable\libs;..\..\..\addons\ofxAnimatable\src;..\..\..\addons\ofxCheatCodesTrigger\libs;..\..\..\addons\ofxCheatCodesTrigger\src;E:\gstreamer\1.0\x86\include;E:\gstreamer\1.0\x86\include\gstreamer-1.0;E:\gstreamer\1.0\x86\include\glib-2.0;E:\gstreamer\1.0\x86\lib\glib-2.0\include;..\..\..\addons\ofxHttpUtils\libs;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxTheatre\libs;..\..\..\addons\ofxTheatre\src;..\..\..\addons\ofxTrueTypeFontUC\libs;..\..\..\addons\ofxTrueTypeFontUC\src;..\..\..\addons\ofxCTKinectV2\src;..\..\..\addons\ofxHapPlayer\libs;..\..\..\addons\ofxHapPlayer\src;..\..\..\addons\ofxHapPlayer\libs\HapSupport;..\..\..\addons\ofxHapPlayer\libs\HapSupport\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);kinect20.lib;gstreamer-1.0.lib;gstapp-1.0.lib;gstvideo-1.0.lib;gstbase-1.0.lib;gstnet-1.0.lib;gstaudio-1.0.lib;gio-2.0.lib;pangowin32-1.0.lib;gdi32.lib;pangocairo-1.0.lib;gdk_pixbuf-2.0.lib;pango-1.0.lib;cairo.lib;gobject-2.0.lib;gmodule-2.0.lib;gthread-2.0.lib;ffi.lib;ws2_32.lib;ole32.lib;winmm.lib;shlwapi.lib;intl.lib;glib-2.0.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);E:\gstreamer\1.0\x86\lib;$(KINECTSDK20_DIR)\lib\x86;</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <AdditionalIncludeDirectories>..\..\..\addons\ofxCTKinectV2\src;$(KINECTSDK20_DIR)\inc;%(AdditionalIncludeDirectories);..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src;..\..\..\addons\ofxAnimatable\libs;..\..\..\addons\ofxAnimatable\src;..\..\..\addons\ofxCheatCodesTrigger\libs;..\..\..\addons\ofxCheatCodesTrigger\src;E:\gstreamer\1.0\x86\include;E:\gstreamer\1.0\x86\include\gstreamer-1.0;E:\gstreamer\1.0\x86\include\glib-2.0;E:\gstreamer\1.0\x86\lib\glib-2.0\include;..\..\..\addons\ofxHttpUtils\libs;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxTheatre\libs;..\..\..\addons\ofxTheatre\src;..\..\..\addons\ofxTrueTypeFontUC\libs;..\..\..\addons\ofxTrueTypeFontUC\src;..\..\..\addons\ofxHapPlayer\libs;..\..\..\addons\ofxHapPlayer\src;..\..\..\addons\ofxHapPlayer\libs\HapSupport;..\..\..\addons\ofxHapPlayer\libs\HapSupport\src</AdditionalIncludeDirectories>
+      <CompileAs>CompileAsCpp</CompileAs>
+    </ClCompile>
+    <Link>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <AdditionalDependencies>%(AdditionalDependencies);kinect20.lib;gstreamer-1.0.lib;gstapp-1.0.lib;gstvideo-1.0.lib;gstbase-1.0.lib;gstnet-1.0.lib;gstaudio-1.0.lib;gio-2.0.lib;pangowin32-1.0.lib;gdi32.lib;pangocairo-1.0.lib;gdk_pixbuf-2.0.lib;pango-1.0.lib;cairo.lib;gobject-2.0.lib;gmodule-2.0.lib;gthread-2.0.lib;ffi.lib;ws2_32.lib;ole32.lib;winmm.lib;shlwapi.lib;intl.lib;glib-2.0.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(KINECTSDK20_DIR)\lib\x86;%(AdditionalLibraryDirectories);E:\gstreamer\1.0\x86\lib</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\addons\ofxCTKinectV2\src\ofxCTKinectV2.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxHapPlayer\libs\HapSupport\src\HapSupport.c" />
+    <ClCompile Include="..\..\..\addons\ofxHapPlayer\src\ofxHapPlayer.cpp" />
+    <ClCompile Include="src\AudioMgr.cpp" />
+    <ClCompile Include="src\ControlEvent.cpp" />
+    <ClCompile Include="src\ArcadyanTheatre.cpp" />
+    <ClCompile Include="src\FactoryGame.cpp" />
+    <ClCompile Include="src\Gesture.cpp" />
+    <ClCompile Include="src\GestureManager.cpp" />
+    <ClCompile Include="src\GestureSegment.cpp" />
+    <ClCompile Include="src\GreenbuildingCtrl.cpp" />
+    <ClCompile Include="src\ImageSlider.cpp" />
+    <ClCompile Include="src\InfoDisplay.cpp" />
+    <ClCompile Include="src\KinectCtrl.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Arcadyan.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatable.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableFloat.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfColor.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfPoint.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxCheatCodesTrigger\src\ofxCheatCodesTrigger.cpp" />
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstUtils.cpp" />
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstVideoPlayer.cpp" />
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstVideoGrabber.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreActor.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreAnimator.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreDirector.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreElement.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreEvents.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreStage.cpp" />
+    <ClCompile Include="..\..\..\addons\ofxTrueTypeFontUC\src\ofxTrueTypeFontUC.cpp" />
+    <ClCompile Include="src\TextCurveSlider.cpp" />
+    <ClCompile Include="src\TimelineElement.cpp" />
+    <ClCompile Include="src\TimelineTrigger.cpp" />
+    <ClCompile Include="src\VerticalImageSlider.cpp" />
+    <ClCompile Include="src\VideoManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxCTKinectV2\src\ofxCTKinectV2.h" />
+    <ClInclude Include="..\..\..\addons\ofxHapPlayer\libs\HapSupport\src\HapSupport.h" />
+    <ClInclude Include="..\..\..\addons\ofxHapPlayer\src\ofxHapPlayer.h" />
+    <ClInclude Include="src\AudioMgr.h" />
+    <ClInclude Include="src\ControlEvent.h" />
+    <ClInclude Include="src\ArcadyanTheatre.h" />
+    <ClInclude Include="src\Arcadyan.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatable.h" />
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableFloat.h" />
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfColor.h" />
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfPoint.h" />
+    <ClInclude Include="..\..\..\addons\ofxCheatCodesTrigger\src\ofxCheatCodesTrigger.h" />
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstUtils.h" />
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstVideoPlayer.h" />
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstVideoGrabber.h" />
+    <ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpTypes.h" />
+    <ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreActor.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreAnimator.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreDirector.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreElement.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreEvents.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreProtocol.h" />
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreStage.h" />
+    <ClInclude Include="..\..\..\addons\ofxTrueTypeFontUC\src\ofxTrueTypeFontUC.h" />
+    <ClInclude Include="src\FactoryGame.h" />
+    <ClInclude Include="src\Gesture.h" />
+    <ClInclude Include="src\GestureManager.h" />
+    <ClInclude Include="src\GestureSegment.h" />
+    <ClInclude Include="src\GreenbuildingCtrl.h" />
+    <ClInclude Include="src\ImageSlider.h" />
+    <ClInclude Include="src\InfoDisplay.h" />
+    <ClInclude Include="src\KinectCtrl.h" />
+    <ClInclude Include="src\NameManager.h" />
+    <ClInclude Include="src\protocol.h" />
+    <ClInclude Include="src\SliderParameter.h" />
+    <ClInclude Include="src\SubtitleCreater.h" />
+    <ClInclude Include="src\TimelineElement.h" />
+    <ClInclude Include="src\TextCurveSlider.h" />
+    <ClInclude Include="src\TimelineTrigger.h" />
+    <ClInclude Include="src\VerticalImageSlider.h" />
+    <ClInclude Include="src\VideoManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
+      <Project>{5837595d-aca9-485c-8e76-729040ce4b0b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc">
+      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
+    </ResourceCompile>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

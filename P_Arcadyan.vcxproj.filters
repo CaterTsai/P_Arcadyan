@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatable.cpp">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableFloat.cpp">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfColor.cpp">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfPoint.cpp">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxCheatCodesTrigger\src\ofxCheatCodesTrigger.cpp">
+      <Filter>addons\ofxCheatCodesTrigger\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstUtils.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstVideoPlayer.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libs\openFrameworks\video\ofGstVideoGrabber.cpp">
+      <Filter>other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.cpp">
+      <Filter>addons\ofxHttpUtils\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreActor.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreAnimator.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreDirector.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreElement.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreEvents.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTheatre\src\ofxTheatreStage.cpp">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxTrueTypeFontUC\src\ofxTrueTypeFontUC.cpp">
+      <Filter>addons\ofxTrueTypeFontUC\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arcadyan.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VideoManager.cpp">
+      <Filter>src\VideoManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InfoDisplay.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ImageSlider.cpp">
+      <Filter>src\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ArcadyanTheatre.cpp">
+      <Filter>src\ArcadyanTheatre</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GreenbuildingCtrl.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VerticalImageSlider.cpp">
+      <Filter>src\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxCTKinectV2\src\ofxCTKinectV2.cpp">
+      <Filter>addons\ofxCTKinectV2\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\KinectCtrl.cpp">
+      <Filter>src\Kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxHapPlayer\src\ofxHapPlayer.cpp">
+      <Filter>addons\ofxHapPlayer\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\addons\ofxHapPlayer\libs\HapSupport\src\HapSupport.c">
+      <Filter>addons\ofxHapPlayer\libs\HapSupport\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextCurveSlider.cpp">
+      <Filter>src\Slider</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Gesture.cpp">
+      <Filter>src\Kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GestureManager.cpp">
+      <Filter>src\Kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GestureSegment.cpp">
+      <Filter>src\Kinect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimelineElement.cpp">
+      <Filter>src\TimelineTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TimelineTrigger.cpp">
+      <Filter>src\TimelineTrigger</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AudioMgr.cpp">
+      <Filter>src\AudioManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ControlEvent.cpp">
+      <Filter>src\ArcadyanTheatre</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FactoryGame.cpp">
+      <Filter>src\FactoryGame</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="src">
+      <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons">
+      <UniqueIdentifier>{71834F65-F3A9-211E-73B8-DC85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings">
+      <UniqueIdentifier>{877F005D-13E6-0592-1D97-F2E3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\src">
+      <UniqueIdentifier>{CCB2AC63-49D2-977C-CFE8-AEAD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxXmlSettings\libs">
+      <UniqueIdentifier>{687714A8-1662-FA1C-261F-50F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxAnimatable">
+      <UniqueIdentifier>{76597DE6-6EC6-9B33-AE16-324A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxAnimatable\src">
+      <UniqueIdentifier>{9A0AF1AC-D8D7-DC08-0B38-3CC3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCheatCodesTrigger">
+      <UniqueIdentifier>{4A3B764C-C4B4-4FBB-F3CD-F991}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCheatCodesTrigger\src">
+      <UniqueIdentifier>{0DDF6C4B-52EA-34F0-5B2F-CA24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="other">
+      <UniqueIdentifier>{A2230F47-9F6B-908F-FF0E-E006}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHttpUtils">
+      <UniqueIdentifier>{9026F5EC-35A9-F15A-2462-123F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHttpUtils\src">
+      <UniqueIdentifier>{CA7772C3-8252-314E-EF20-BA6B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTheatre">
+      <UniqueIdentifier>{4FEDE29E-6DAC-DFDE-7168-CE34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTheatre\src">
+      <UniqueIdentifier>{B76D4408-9794-4561-6070-DDB9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTrueTypeFontUC">
+      <UniqueIdentifier>{5652952C-1675-EFF8-8E62-5D8C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxTrueTypeFontUC\src">
+      <UniqueIdentifier>{7E369600-03BF-EEFC-FA92-F38A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\VideoManager">
+      <UniqueIdentifier>{9d8aa7dc-56b0-49ee-b869-4e8b036c600f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Slider">
+      <UniqueIdentifier>{403711d1-9ee8-4504-827b-2068f243e89a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\ArcadyanTheatre">
+      <UniqueIdentifier>{2dc030a5-c7fa-44e3-b615-1278d27b3663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCTKinectV2">
+      <UniqueIdentifier>{783bbf19-af2b-430c-81c5-4154c6061063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxCTKinectV2\src">
+      <UniqueIdentifier>{fc331518-e8cf-46d7-a5f6-1e62ce95db87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Kinect">
+      <UniqueIdentifier>{16c2af62-5696-4afa-8a6b-51bd9a07189c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHapPlayer">
+      <UniqueIdentifier>{7db6e094-89fd-49bd-9abf-f56305efa2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHapPlayer\libs">
+      <UniqueIdentifier>{fe938ac8-c181-4ecd-8cb0-074be923bd49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHapPlayer\src">
+      <UniqueIdentifier>{6c8afa71-ceb5-4f93-9dc6-1a8139c306c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHapPlayer\libs\HapSupport">
+      <UniqueIdentifier>{2e715379-f4d3-4d16-9d35-10a3bb4dcfe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="addons\ofxHapPlayer\libs\HapSupport\src">
+      <UniqueIdentifier>{ad2ee85c-8c18-4f13-818e-7ea737cc3a2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\TimelineTrigger">
+      <UniqueIdentifier>{33afdc0a-750f-4ff6-9501-e4ab569f1f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\AudioManager">
+      <UniqueIdentifier>{b271f454-d544-4a8c-9bd7-60b9927c8a6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\FactoryGame">
+      <UniqueIdentifier>{b76d4a79-a66f-4d60-b347-10f6f08d8a6d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
+      <Filter>addons\ofxXmlSettings\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h">
+      <Filter>addons\ofxXmlSettings\libs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatable.h">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableFloat.h">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfColor.h">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxAnimatable\src\ofxAnimatableOfPoint.h">
+      <Filter>addons\ofxAnimatable\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxCheatCodesTrigger\src\ofxCheatCodesTrigger.h">
+      <Filter>addons\ofxCheatCodesTrigger\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstUtils.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstVideoPlayer.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\libs\openFrameworks\video\ofGstVideoGrabber.h">
+      <Filter>other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpTypes.h">
+      <Filter>addons\ofxHttpUtils\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.h">
+      <Filter>addons\ofxHttpUtils\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreActor.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreAnimator.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreDirector.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreElement.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreEvents.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreProtocol.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTheatre\src\ofxTheatreStage.h">
+      <Filter>addons\ofxTheatre\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxTrueTypeFontUC\src\ofxTrueTypeFontUC.h">
+      <Filter>addons\ofxTrueTypeFontUC\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\protocol.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arcadyan.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VideoManager.h">
+      <Filter>src\VideoManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InfoDisplay.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ImageSlider.h">
+      <Filter>src\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ArcadyanTheatre.h">
+      <Filter>src\ArcadyanTheatre</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GreenbuildingCtrl.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VerticalImageSlider.h">
+      <Filter>src\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxCTKinectV2\src\ofxCTKinectV2.h">
+      <Filter>addons\ofxCTKinectV2\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\KinectCtrl.h">
+      <Filter>src\Kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxHapPlayer\src\ofxHapPlayer.h">
+      <Filter>addons\ofxHapPlayer\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\addons\ofxHapPlayer\libs\HapSupport\src\HapSupport.h">
+      <Filter>addons\ofxHapPlayer\libs\HapSupport\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextCurveSlider.h">
+      <Filter>src\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SliderParameter.h">
+      <Filter>src\Slider</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Gesture.h">
+      <Filter>src\Kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GestureManager.h">
+      <Filter>src\Kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GestureSegment.h">
+      <Filter>src\Kinect</Filter>
+    </ClInclude>
+    <ClInclude Include="src\NameManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TimelineElement.h">
+      <Filter>src\TimelineTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TimelineTrigger.h">
+      <Filter>src\TimelineTrigger</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SubtitleCreater.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AudioMgr.h">
+      <Filter>src\AudioManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ControlEvent.h">
+      <Filter>src\ArcadyanTheatre</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FactoryGame.h">
+      <Filter>src\FactoryGame</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="icon.rc" />
+  </ItemGroup>
+</Project>
