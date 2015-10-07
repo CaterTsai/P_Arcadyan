@@ -213,13 +213,6 @@ void Arcadyan::keyPressed(int key)
 {
 	switch(key)
 	{
-	case 'c':
-		{
-			_FactoryGame.nextStep();
-			_FactoryGame.exitItems();
-			_FactoryGame.hideInfo();
-			break;
-		}
 	case 'b':
 		{
 			_DisplayBody ^= true;
@@ -374,6 +367,7 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 	}
 	else if(e == NAME_MANAGER::T_EnterArm)
 	{
+		_FactoryGame.showScorePlane();
 		_FactoryGame.enterArm();
 	}
 	else if(e == NAME_MANAGER::T_StartFactory)
@@ -667,11 +661,11 @@ void Arcadyan::InitialVideoManager()
 	_VideoMgr.addVideoWithSourcePlayer("videos/intro_loop.mov", "V_IntroLoop", true);
 	_VideoMgr.addVideoWithSourcePlayer("videos/intro_out.mov", "V_IntroOut");
 
-	_VideoMgr.addVideo("videos/Cloud_intro.mov", "V_FadeIn",ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), true);
-	_VideoMgr.addVideo("videos/csr.mov", "V_CSR",ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), true);
-	_VideoMgr.addVideo("videos/slider_loop.mov", "V_SliderLoop",ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), true, true, false);
+	_VideoMgr.addVideo("videos/Cloud_intro.mov", "V_FadeIn",ofPtr<ofxHapPlayer>(new ofxHapPlayer), true);
+	_VideoMgr.addVideo("videos/csr.mov", "V_CSR",ofPtr<ofxHapPlayer>(new ofxHapPlayer), true);
+	_VideoMgr.addVideo("videos/slider_loop.mov", "V_SliderLoop",ofPtr<ofxHapPlayer>(new ofxHapPlayer), true, true, false);
 	
-	_VideoMgr.addVideo("videos/open.mov", "V_Door",ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), true);
+	_VideoMgr.addVideo("videos/open.mov", "V_Door",ofPtr<ofxHapPlayer>(new ofxHapPlayer), true);
 
 	_VideoMgr.setBackgroundVideo("videos/clouds_Loop.mp4", (ofPtr<ofBaseVideoPlayer>)ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
 
@@ -886,7 +880,6 @@ void Arcadyan::onFactoryEvent(string& e)
 	}
 }
 #pragma endregion
-
 
 #pragma region Audio & BGM
 //--------------------------------------------------------------

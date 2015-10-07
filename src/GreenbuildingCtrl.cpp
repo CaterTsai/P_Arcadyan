@@ -37,7 +37,6 @@ void GreenBuildingCtrl::setupGreenBuildingCtrl()
 #ifdef TIMEOUT_MODE
 	_bStartTimer = false;
 #endif // TIMEOUT_MODE
-
 }
 
 //--------------------------------------------------------------

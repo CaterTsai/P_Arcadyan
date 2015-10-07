@@ -105,10 +105,9 @@ public:
 	void stop();
 
 private:
-	bool					_bStart;
-	
-	ofImage			_ScorePlane;
+	bool							_bStart;
 	eFACTORY_STATE	_eState;
+	
 //-------------------------
 //Arm Video 
 //-------------------------
@@ -116,7 +115,8 @@ private:
 	void initialArmVideo();
 	void updateArmVideo();
 	void drawArmVideo();
-		
+	void resetArmVideo();
+
 	void startArmLoop();
 
 public:
@@ -124,7 +124,7 @@ public:
 
 private:
 	bool						_bStartLoop;
-	int							_iLoopPoint;
+	int							_iLoopPoint, _iPcs;
 	ofVideoPlayer		_ArmVideo;
 //-------------------------
 //Player Video
@@ -133,10 +133,11 @@ private:
 	void initialPlayerVideo();
 	void updatePlayerVideo();
 	void drawPlayerVideo();
+	void resetPlayerVideo();
 
 	void startPlayerVideo();
-public:
 	void nextStep();
+	
 private:
 	bool					_bIsFinish;
 	int						_PlayerIndex;
@@ -146,14 +147,13 @@ private:
 //-------------------------
 //Items
 //-------------------------
-public:
-	void enterItems();
-	void exitItems();
-
 private:
 	void initialItems();
 	void updateItems(float fDelta);
 	void drawItems();
+	
+	void enterItems();
+	void exitItems();
 
 	void selectItemCheck();
 	void ItemPlugInCheck();
@@ -177,16 +177,20 @@ private:
 	void drawInfoBoard();
 	void resetInfoBoard();
 
-public:
 	void showInfo();
 	void hideInfo();	
-	
 	void showConclusion();
 	void hideConclusion();
-	//void 
+	void exitBoard();
+
+	void displayPcs();
+
 private:
-	bool															_bShowConclusion;
-	ofImage													_InfoBoard, _InfoBenefit, _InfoConclusion, _InfoConslusionMask;	
+	bool															_bShowConclusion, _bShowInfoBoard;
+	ofImage													_InfoBoard, _InfoBenefit;
+	ofImage													_InfoConclusion, _InfoConslusionMask;
+	ofImage													_InfoPcs;
+	ofVideoPlayer											_InfoBoardExit;
 
 	bool															_bStartConclusion;
 	float															_ConclusionTimer;
@@ -194,11 +198,37 @@ private:
 	map<eFACTORY_STATE, ofImage>	_InfoList;
 	ofxAnimatableFloat								_AnimTextAlpha, _AnimConclusAlpha;
 
+	vector<ofImage>									_PcsImg;
+//-------------------------
+//Score Plane
+//-------------------------
+private:
+	void initialScorePlane();
+	void updateScorePlane(float fDelta);
+	void drawScorePlane();
+	void resetScorePlane();
+
+public:
+	void showScorePlane();
+private:
+	ofxAnimatableFloat								_AnimScorePos;
+	ofImage													_ScorePlane;
+	
 ////////////////////////////
 //EVENT
 ////////////////////////////
 public:
 	ofEvent<string>	_FactoryEvent;
+
+
+#ifdef TIMEOUT_MODE
+//-------------------------------------------------
+//Debug timer
+//-------------------------------------------------
+private:
+	bool  _bStartTimer;
+	float _fDebugTimer;
+#endif // !TIMEOUT_MODE
 };
 
 #endif // !_ARCADYAN_FACTORY_GAME_

@@ -1,7 +1,7 @@
 #ifndef _ARCADYAN_PROTOCOL_
 #define _ARCADYAN_PROTOCOL_
 
-//#define TIMEOUT_MODE
+#define TIMEOUT_MODE
 //#define MEM_CHECK
 
 #include "ofMain.h"
@@ -63,10 +63,12 @@ static const float cGREEN_IN_TIMEOUT =  5;
 static const float cGREEN_OUT_TIMEOUT = 10;
 static const float cMILESTONE_IN_TIMEOUT = 5;
 static const float cPRODUCT_IN_TIMEOUT = 5;
+static const float cFACOTYR_NEXT_TIMEOUT = 3;
 static const float cTAKE_PHOTO_TIMEOUT = 5;
 
 static const ofRectangle cPHOTO_FRAME_KINECT_RECT = ofRectangle(40, 586, 1030, 581);
 
 static const int cFACTORY_ITEMS_NUM = 4;
 static const float cFACTORY_ITEMS_MOVE_DIST = 588;
+
 #endif // !_ARCADYAN_PROTOCOL_

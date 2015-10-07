@@ -8,12 +8,18 @@ void FactoryGame::setup()
 	initialPlayerVideo();
 	initialArmVideo();
 	initialInfoBoard();
+	initialScorePlane();
+
+#ifdef TIMEOUT_MODE
+	_bStartTimer = false;
+#endif // TIMEOUT_MODE
 }
 
 //--------------------------------------------------------------
 void FactoryGame::update(float fDelta, ofPoint& CtrlPos)
 {
 	updateArmVideo();
+	updateScorePlane(fDelta);
 
 	if(!_bStart)
 	{
@@ -23,11 +29,35 @@ void FactoryGame::update(float fDelta, ofPoint& CtrlPos)
 	updateItems(fDelta);
 	updatePlayerVideo();
 	updateInfoBoard(fDelta);
+	
+#ifdef TIMEOUT_MODE
+	if(_bStartTimer)
+	{
+		_fDebugTimer -= fDelta;
+		if(_fDebugTimer < 0.0)
+		{
+			if(_eState != eFACTORY_FINISH)
+			{
+				nextStep();
+				exitItems();
+				hideInfo();
+				_fDebugTimer = cFACOTYR_NEXT_TIMEOUT;				
+			}
+			else
+			{
+				_bStartTimer = false;
+			}
+		}
+	}
+#endif // TIMEOUT_MODE
+
 }
 
 //--------------------------------------------------------------
 void FactoryGame::draw()
 {
+	//Before game start
+	drawScorePlane();
 	drawArmVideo();
 
 	if(!_bStart)
@@ -60,6 +90,11 @@ void FactoryGame::start()
 	resetInfoBoard();
 
 	showInfo();	
+
+#ifdef TIMEOUT_MODE
+	_bStartTimer = true;
+	_fDebugTimer = cFACOTYR_NEXT_TIMEOUT;
+#endif // TIMEOUT_MODE
 }
 
 //--------------------------------------------------------------
@@ -69,7 +104,10 @@ void FactoryGame::stop()
 	{
 		return;
 	}
-
+	resetArmVideo();
+	resetPlayerVideo();
+	resetInfoBoard();
+	resetScorePlane();
 	_bStart = false;
 }
 #pragma endregion
@@ -87,6 +125,7 @@ void FactoryGame::initialArmVideo()
 	_ArmVideo.setLoopState(ofLoopType::OF_LOOP_NONE);
 
 	_iLoopPoint = 132;
+	_iPcs = 0;
 }
 
 //--------------------------------------------------------------
@@ -104,6 +143,7 @@ void FactoryGame::updateArmVideo()
 		if(abs(iFrame_ - _ArmVideo.getTotalNumFrames()) < 2)
 		{
 			_ArmVideo.setFrame(_iLoopPoint);
+			_iPcs++;
 		}
 	}
 	else
@@ -128,10 +168,20 @@ void FactoryGame::drawArmVideo()
 }
 
 //--------------------------------------------------------------
+void FactoryGame::resetArmVideo()
+{
+	_iPcs = 0;
+	_ArmVideo.setFrame(0);
+	_ArmVideo.update();
+	_ArmVideo.stop();
+}
+
+//--------------------------------------------------------------
 void FactoryGame::startArmLoop()
 {
 	if(_ArmVideo.isLoaded())
 	{
+		_iPcs = 0;
 		_bStartLoop = true;
 		_ArmVideo.play();
 	}
@@ -186,7 +236,7 @@ void FactoryGame::updatePlayerVideo()
 		ofNotifyEvent(_FactoryEvent, strMsg_);
 	}
 	else
-	{
+	{	
 		if(iFrame_ > _PlayerCheckPoint[_PlayerIndex].second)
 		{
 			_PlayerVideo.setFrame(_PlayerCheckPoint[_PlayerIndex].first);
@@ -211,6 +261,14 @@ void FactoryGame::drawPlayerVideo()
 }
 
 //--------------------------------------------------------------
+void FactoryGame::resetPlayerVideo()
+{
+	_PlayerVideo.setFrame(0);
+	_PlayerVideo.update();
+	_PlayerVideo.stop();
+}
+
+//--------------------------------------------------------------
 void FactoryGame::startPlayerVideo()
 {
 	if(!_PlayerVideo.isLoaded())
@@ -226,9 +284,15 @@ void FactoryGame::startPlayerVideo()
 void FactoryGame::nextStep()
 {
 	_PlayerIndex++;
+	
 	if(_PlayerIndex == 4)
 	{
+		_PlayerVideo.setFrame(_PlayerCheckPoint[_PlayerIndex - 1].second);
 		_bIsFinish = true;
+	}
+	else
+	{
+		_PlayerVideo.setFrame(_PlayerCheckPoint[_PlayerIndex].first);
 	}
 }
 #pragma endregion
@@ -480,10 +544,14 @@ void FactoryGame::changeItems(eFACTORY_STATE eState)
 void FactoryGame::initialInfoBoard()
 {
 	_bShowConclusion = false;
+	_bStartConclusion = false;
+	_bShowInfoBoard = true;
+
 	_InfoBoard.loadImage("images/factoryBoard.png");
 	_InfoBenefit.loadImage("images/factoryBenefit.png");
 	_InfoConclusion.loadImage("images/factoryTextEnd.png");
 	_InfoConslusionMask.loadImage("images/factoryTextMask.png");
+	_InfoPcs.loadImage("images/factory_pcs.png");
 
 	ofImage text1_, text2_, text3_, text4_;
 	text1_.loadImage("images/factoryTextBenefit01.png");
@@ -495,9 +563,20 @@ void FactoryGame::initialInfoBoard()
 	_InfoList.insert(make_pair(eFACTORY_ANTENNA, text3_));
 	_InfoList.insert(make_pair(eFACTORY_PORT, text4_));
 	
+	_InfoBoardExit.setPlayer(ofPtr<ofxHapPlayer>(new ofxHapPlayer));
+	_InfoBoardExit.loadMovie("videos/Factory_BoardExit.mov");
+	_InfoBoardExit.setLoopState(ofLoopType::OF_LOOP_NONE);
+
+	_PcsImg.resize(10);
+	string strPath_ = "images/FactoryScore/pcs_";
+	string strExt_ = ".png";
+	for(int idx_ = 0; idx_ < 10; idx_++)
+	{
+		_PcsImg[idx_].loadImage(strPath_ + ofToString(idx_) + strExt_);
+	}
+
 	_AnimTextAlpha.reset(1.0);
 	_AnimTextAlpha.setDuration(0.5);
-
 	_AnimConclusAlpha.setDuration(0.5);
 }
 
@@ -507,20 +586,30 @@ void FactoryGame::updateInfoBoard(float fDelta)
 	_AnimTextAlpha.update(fDelta);
 	_AnimConclusAlpha.update(fDelta);
 
-	if(_bStartConclusion)
-	{
-		_ConclusionTimer -= fDelta;
-		if(_ConclusionTimer <= 0.0)
+	if(!_bShowInfoBoard){
+		_InfoBoardExit.update();
+
+		if(_InfoBoardExit.getIsMovieDone())
 		{
-			hideConclusion();
+			string strMsg_ = NAME_MANAGER::F_GameFinish;
+			ofNotifyEvent(_FactoryEvent, strMsg_);
 		}
 	}
-
-	if(_AnimConclusAlpha.hasFinishedAnimating() && _AnimConclusAlpha.getPercentDone() == 1.0 && _AnimConclusAlpha.getCurrentValue() == 0.0)
+	else
 	{
-		_bShowConclusion = false;
-		string strMsg_ = NAME_MANAGER::F_GameFinish;
-		ofNotifyEvent(_FactoryEvent, strMsg_);
+		if(_bStartConclusion)
+		{
+			_ConclusionTimer -= fDelta;
+			if(_ConclusionTimer <= 0.0)
+			{
+				hideConclusion();
+			}
+		}
+
+		if(_bShowConclusion && _AnimConclusAlpha.hasFinishedAnimating() && _AnimConclusAlpha.getPercentDone() == 1.0 && _AnimConclusAlpha.getCurrentValue() == 0.0)
+		{
+			exitBoard();			
+		}
 	}
 }
 
@@ -531,7 +620,14 @@ void FactoryGame::drawInfoBoard()
 	ofSetColor(255);
 	ofEnableAlphaBlending();
 	{
-		_InfoBoard.draw(0, 0);
+		if(_bShowInfoBoard)
+		{
+			_InfoBoard.draw(0, 0);
+		}
+		else
+		{
+			_InfoBoardExit.draw(0, 0);
+		}
 
 		if(_eState != eFACTORY_FINISH)
 		{	
@@ -552,8 +648,10 @@ void FactoryGame::drawInfoBoard()
 		{
 			ofSetColor(255, _AnimConclusAlpha.getCurrentValue() * 255);
 			//ofSetColor(255);
-			_InfoConslusionMask.draw(0, 0);
+			_InfoPcs.draw(0, 0);
+			displayPcs();
 			_InfoConclusion.draw(0, 0);
+			_InfoConslusionMask.draw(0, 0);
 		}
 	}
 	ofPopStyle();
@@ -562,7 +660,13 @@ void FactoryGame::drawInfoBoard()
 //--------------------------------------------------------------
 void FactoryGame::resetInfoBoard()
 {
+	_bShowInfoBoard = true;
 	_bShowConclusion = false;
+	_bStartConclusion = false;
+
+	_InfoBoardExit.setFrame(0);
+	_InfoBoardExit.update();
+	_InfoBoardExit.stop();
 }
 
 //--------------------------------------------------------------
@@ -597,5 +701,83 @@ void FactoryGame::hideConclusion()
 		_AnimConclusAlpha.animateFromTo(1.0, 0.0);
 		_bStartConclusion = false;
 	}	
+}
+
+//--------------------------------------------------------------
+void FactoryGame::exitBoard()
+{
+	_InfoBoardExit.play();
+	_bShowInfoBoard = false;
+}
+
+
+//--------------------------------------------------------------
+void FactoryGame::displayPcs()
+{
+	int pcs_ = _iPcs % 1000; //Maximum is 999
+	int hundreds_ = pcs_ / 100;
+	pcs_ %= 100;
+	int tens_ = pcs_/10;
+	int units_ = pcs_ % 10;
+	
+	bool bShowZero_ = false;
+
+	if(hundreds_ != 0)
+	{
+		bShowZero_ = true;
+		_PcsImg[hundreds_].draw(1183, 554);
+	}
+
+	if(tens_ != 0 || bShowZero_)
+	{
+		bShowZero_ = true;
+		_PcsImg[tens_].draw(1213, 554);
+	}
+
+	_PcsImg[units_].draw(1243, 554);
+
+}
+#pragma endregion
+
+#pragma region Score Plane
+//--------------------------------------------------------------
+void FactoryGame::initialScorePlane()
+{
+	_ScorePlane.loadImage("images/factoryHud.png");
+	_AnimScorePos.setDuration(2.0);
+	_AnimScorePos.reset(180);
+}
+
+//--------------------------------------------------------------
+void FactoryGame::updateScorePlane(float fDelta)
+{
+	_AnimScorePos.update(fDelta);
+}
+
+//--------------------------------------------------------------
+void FactoryGame::drawScorePlane()
+{
+	ofPushStyle();
+	ofSetColor(255);
+	ofEnableAlphaBlending();
+	ofPushMatrix();
+	ofTranslate(0, _AnimScorePos.getCurrentValue());
+	{
+		_ScorePlane.draw(0, 0);
+	}
+	ofPopMatrix();
+	ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void FactoryGame::resetScorePlane()
+{
+	_AnimScorePos.reset(180);
+}
+
+//--------------------------------------------------------------
+void FactoryGame::showScorePlane()
+{
+	_AnimScorePos.animateFromTo(180, 0);
 }
 #pragma endregion

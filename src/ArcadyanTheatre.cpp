@@ -320,8 +320,11 @@ void ArcadyanTheatre::updateTheatre(float fDelta, ofPoint CtrlPos)
 			_fDebugTimer -= fDelta;
 			if(_fDebugTimer < 0.0)
 			{
-				_Director.TransitTo(TRANSITION_TYPE::eTRANSITION_NONE);
-				this->TheatreAnimInit(NAME_MANAGER::S_TakePicture);
+				ofxVideoElement	*pVideo_ = nullptr;
+				_Director.GetElementPtr(NAME_MANAGER::E_ProductVideoAndFactoryIntro, pVideo_);
+				pVideo_->PlayVideo();		
+
+				this->disableControlEvent(NAME_MANAGER::S_ProductAndFactory);
 				_bStartTimer = false;
 			}
 		}
@@ -395,7 +398,7 @@ void ArcadyanTheatre::TheatreAnimInit(string strScenes)
 	else if(strScenes == NAME_MANAGER::S_ProductAndFactory)
 	{
 		_Director.GetElementPtr(NAME_MANAGER::E_ProductVideoAndFactoryIntro, pElementPtr_);
-		_Director.AddVideoAnimation(NAME_MANAGER::S_ProductAndFactory,  new ofxEmptyAnimation(NAME_MANAGER::ANIM_FactoryArmEnter, pElementPtr_, 1700, 0.0));
+		_Director.AddVideoAnimation(NAME_MANAGER::S_ProductAndFactory,  new ofxEmptyAnimation(NAME_MANAGER::ANIM_FactoryArmEnter, pElementPtr_, 1866, 0.0));
 	}
 	else if(strScenes == NAME_MANAGER::S_TakePicture)
 	{
