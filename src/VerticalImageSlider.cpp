@@ -17,7 +17,6 @@ void VirticalSlider::setupVirticalSlider(ofRectangle DisplayArea, float fInterva
 	}
 
 	_fInterval = fInterval;
-
 	ofPoint CenterPos_(DisplayArea.width/2, DisplayArea.height/2);
 
 	stSLIDER_UNIT FirstUnit_;
@@ -111,8 +110,7 @@ void VirticalSlider::updateVirticalSlider(float fDelta, ofRectangle& CtrlArea)
 
 			//Left (0->1)
 			_SliderList[1].fScale = _AnimScale.getCurrentValue() * (1 - cSMALL_PHOTO_SCALE) + cSMALL_PHOTO_SCALE;
-		}
-		
+		}		
 
 		if(_AnimSlide.getPercentDone() == 1.0)
 		{
@@ -154,8 +152,28 @@ void VirticalSlider::updateVirticalSlider(float fDelta, ofRectangle& CtrlArea)
 	}
 	if(_CameraArea.intersects(CtrlArea))
 	{
-		string strMsg_ = "takePicture";
-		ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+		if(_bStartTakePicture)
+		{
+			_fPictureTimer -= fDelta;
+			if(_fPictureTimer <= 0)
+			{
+				string strMsg_ = "takePicture";
+				ofNotifyEvent(_VerticalSliderEvent, strMsg_);
+			}
+		}
+		else
+		{
+			_bStartTakePicture = true;
+			_fPictureTimer = cTAKEPICTURE_TIME;
+		}
+		
+	}
+	else
+	{
+		if(_bStartTakePicture)
+		{
+			_bStartTakePicture = false;
+		}
 	}
 
 #ifdef TIMEOUT_MODE
@@ -196,6 +214,7 @@ void VirticalSlider::resetVirticalSlider()
 {
 	_bIsDisplay = false;
 	_bCanMove = true;
+	_bStartTakePicture = false;
 }
 
 //--------------------------------------------------------------
@@ -295,6 +314,8 @@ void VirticalSlider::setupControl()
 	_LeftArea.setFromCenter(ofPoint(409, 823), _ArrowLeft.width, _ArrowLeft.height);
 	_RightArea.setFromCenter(ofPoint(1527, 823), _ArrowRight.width, _ArrowRight.height);
 	_CameraArea.setFromCenter(ofPoint(1539, 505), _Camera.width, _Camera.height);
+
+	_bStartTakePicture = false;
 }
 
 //--------------------------------------------------------------

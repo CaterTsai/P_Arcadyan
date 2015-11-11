@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ArcadyanTheatre::setupTheatre()
 {
+	
 	_Director.SetStageSize(ofGetWindowWidth(), ofGetWindowHeight());
 
 #pragma region Scenes
@@ -24,32 +25,32 @@ void ArcadyanTheatre::setupTheatre()
 	//////////////////////
 	//S_Open
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_SwingHandWordTips, "images/start_tip.png", eBLEND_ALPHA));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_SwingHandTipsVideo, "videos/tips/swing.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_SwingHandTipsVideo, "videos/tips/swing.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 
 	//S_Gate
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_DoorImageBG, "images/Door.jpg"));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_DoorOpenVideo, "videos/timetravel.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_OpenTipsVideo, "videos/tips/open.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_DoorOpenVideo, "videos/timetravel.mov"));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_OpenTipsVideo, "videos/tips/open.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 	
 	//S_MainScenes
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_MainScenesBG, "images/MainScenes.png", eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_MainScenesGlass, "images/MainScenes_glass.png", eBLEND_SCREEN));
 
 	//S_GreenBuilding
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingTips, "videos/tips/GreenBuildingTips.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingTips, "videos/tips/GreenBuildingTips.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingLight, "videos/Greenbuilding_light.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingZoomIn, "videos/Greenbuilding_zoomin.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_GreenBuildingZoomIn, "videos/Greenbuilding_zoomin.mov"));
 
 	//S_Milestone
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneTips, "videos/tips/MilestoneTips.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneTips, "videos/tips/MilestoneTips.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_MilestoneBlackGlass, "images/Milestone_glass.png", eBLEND_SCREEN));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneCountdown, "videos/milstone_countdown.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_SCREEN));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneZoomIn, "videos/milstone_zoomin.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneCountdown, "videos/milstone_countdown.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_SCREEN));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneZoomIn, "videos/milstone_zoomin.mov"));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_MilestoneNearBG, "images/Milestone_near.png"));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneVideoLoop, "videos/milstone_loop.mp4",  ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_SCREEN));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_MilestoneVideoLoop, "videos/milstone_loop.mov", eBLEND_SCREEN));
 	
 	//S_Product
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_ProductTips, "videos/tips/ProductTips.mov", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer), eBLEND_ALPHA));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_ProductTips, "videos/tips/ProductTips.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer), eBLEND_ALPHA));
 	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_ProductAndFactoryIntro, "videos/product_2_factoryIntro.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer)));
 	_Director.AddActor(new ofxImageActor(NAME_MANAGER::A_FactoryBG, "images/factory_bg.png"));
 	
@@ -63,7 +64,7 @@ void ArcadyanTheatre::setupTheatre()
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_CamDisplay));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_PhotoFrame, eBLEND_ALPHA));
 	_Director.AddActor(new ofxDynamicImageActor(NAME_MANAGER::A_Photo));
-	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_Ending, "videos/ending.mp4", ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer)));
+	_Director.AddActor(new ofxVideoActor(NAME_MANAGER::A_Ending, "videos/ending.mov", ofPtr<ofxHapPlayer>(new ofxHapPlayer)));
 #pragma endregion
 
 #pragma region Plane
@@ -608,9 +609,9 @@ void ArcadyanTheatre::onTheatreEvent(ofxTheatreEventArgs& e)
 //--------------------------------------------------------------
 void ArcadyanTheatre::setupCityLoop()
 {
-	_CityLoop.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
-	_CityLoop.setLoopState(ofLoopType::OF_LOOP_NORMAL);
-	_CityLoop.loadMovie("videos/city_loop.mp4");
+	//_CityLoop.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
+	//_CityLoop.setLoopState(ofLoopType::OF_LOOP_NORMAL);
+	_CityLoop.loadMovie("videos/city_loop.mov");
 	_bIsCityLoopPlaying = false;
 }
 

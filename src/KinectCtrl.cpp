@@ -8,6 +8,7 @@ void KinectCtrl::setupKinectCtrl()
 	{
 		_bIsSetup = true;
 
+		_CTKinect.setDetectionRange(cKINECT_DETECTION_RANGE);
 		_CTKinect.enableSkeleton();
 		_CTKinect.enableBodyIndex();
 		this->setupGesture();

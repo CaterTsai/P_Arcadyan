@@ -1,7 +1,7 @@
 #ifndef ARCADYAN_GREEN_BUILDING_CTRL
 #define ARCADYAN_GREEN_BUILDING_CTRL
 
-#include "ofGstVideoPlayer.h"
+//#include "ofGstVideoPlayer.h"
 #include "ofxHapPlayer.h"
 #include "ofxAnimatableFloat.h"
 #include "ofxXmlSettings.h"

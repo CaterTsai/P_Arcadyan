@@ -80,7 +80,9 @@ private:
 private:
 	ofImage			_ArrowLeft, _ArrowRight, _Camera;
 	ofRectangle		_LeftArea, _RightArea, _CameraArea;
-
+	
+	bool					_bStartTakePicture;
+	float					_fPictureTimer;
 
 ////////////////////////////
 //EVENT

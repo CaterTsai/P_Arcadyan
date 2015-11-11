@@ -25,6 +25,8 @@ void Arcadyan::setup()
 
 	//Theatre
 	_Arcadyan.setupTheatre();
+	_AnimCameraLight.setDuration(0.3);
+	_AnimCameraLight.setRepeatType(AnimRepeat::PLAY_ONCE);
 	ofAddListener(_Arcadyan.ArcadyanTheaterEvent, this, &Arcadyan::onArcadyanTheaterEvent);
 
 	//Kinect Ctrl
@@ -46,6 +48,7 @@ void Arcadyan::setup()
 
 	//Photo Frame Slider
 	_bCanSavePhoto = false;
+	_FontAriblk.loadFont("fonts/ariblk.ttf", cPHOTO_DATE_FONT_SIZE);
 	_PhotoFrameSlider.setupVirticalSlider(ofRectangle(0, 0, 1024, 250), (cSMALL_PHOTO_WIDTH * cSMALL_PHOTO_SCALE) + 90);
 	ofAddListener(_PhotoFrameSlider._VerticalSliderEvent, this, &Arcadyan::onPhotoFrameChange);
 
@@ -67,7 +70,7 @@ void Arcadyan::setup()
 	_fDebugTimer = cSHAKE_TIMEOUT;
 #endif // TIMEOUT_MODE
 
-	//ofToggleFullscreen();
+	ofToggleFullscreen();
 	ofHideCursor();
 
 #ifdef MEM_CHECK
@@ -171,6 +174,8 @@ void Arcadyan::update()
 		_KinectCtrl.getRGBCam(Display_);
 		pDynamicPtr_->updateImg(Display_);
 
+		_AnimCameraLight.update(fDelta_);
+
 		this->savePicture();
 	}
 
@@ -250,6 +255,11 @@ void Arcadyan::keyPressed(int key)
 				_Arcadyan._Director.TransitTo(eTransitionsType::eTRANSITION_FADE);
 				_GreenBuildingCtrl.stopGreenBuidling();
 				_Arcadyan.playCityLoop();
+			}
+			else if(_Arcadyan._Director.GetNowScenes()->GetScenesName() == NAME_MANAGER::S_ProductAndFactory)
+			{
+				_Arcadyan._Director.TransitTo(eTransitionsType::eTRANSITION_NONE);
+				_Arcadyan.TheatreAnimInit(NAME_MANAGER::S_TakePicture);
 			}
 			else
 			{
@@ -341,6 +351,15 @@ void Arcadyan::drawAfterTheatre()
 	else if(strScenesName_ == NAME_MANAGER::S_TakePicture)
 	{
 		_PhotoFrameSlider.drawVirticalSlider(448, 703);
+
+		if(_AnimCameraLight.isAnimating())
+		{
+			ofPushStyle();
+			ofEnableAlphaBlending();
+			ofSetColor(255, _AnimCameraLight.getCurrentValue());
+			ofRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+			ofPopStyle();
+		}
 	}
 
 	_SubtitleMgr.draw();
@@ -404,6 +423,9 @@ void Arcadyan::onArcadyanTheaterEvent(string& e)
 	{
 		this->takePicture();
 		_KinectCtrl.setRGBCam(false);
+
+		_AnimCameraLight.animateFromTo(255.0, 0);
+		AudioMgr::GetInstance()->playAudio(NAME_MANAGER::AE_CAMERA);
 	}
 	else if(e == NAME_MANAGER::T_StartEnding)
 	{
@@ -667,7 +689,7 @@ void Arcadyan::InitialVideoManager()
 	
 	_VideoMgr.addVideo("videos/open.mov", "V_Door",ofPtr<ofxHapPlayer>(new ofxHapPlayer), true);
 
-	_VideoMgr.setBackgroundVideo("videos/clouds_Loop.mp4", (ofPtr<ofBaseVideoPlayer>)ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
+	_VideoMgr.setBackgroundVideo("videos/clouds_Loop.mov",ofPtr<ofxHapPlayer>(new ofxHapPlayer));
 
 	ofAddListener(VideoManager::VideoEvent, this, &Arcadyan::onVideoEvent);
 }
@@ -757,34 +779,39 @@ void Arcadyan::takePicture()
 	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_CamDisplay, pCamDisplay_);
 	_Arcadyan._Director.GetElementPtr(NAME_MANAGER::E_Photo, pPhoto_);
 
+	
 	//get webcam image
 	pCamDisplay_->getImage(Photo_);
 	//pWebcam_->getImage(Photo_);
 
 	//get photo frame
 	_PhotoFrameSlider.getNowImage(PhotoFrame_);
-
+	
+	string strDate_ = ofGetTimestampString("%Y/%m/%d");
 	//mix the photo
 	ofFbo	Canvas_;
-	Canvas_.allocate(Photo_.getWidth(), Photo_.getHeight(), GL_RGBA);
+	Canvas_.allocate(PhotoFrame_.getWidth(), PhotoFrame_.getHeight(), GL_RGBA);
 	Canvas_.begin();
 	{
 		ofPushStyle();
 		ofSetColor(255);
 
 		PhotoFrame_.draw(0, 0);
-		Photo_.draw(cPHOTO_FRAME_KINECT_RECT);		
+		Photo_.draw(cPHOTO_FRAME_KINECT_RECT);
+
+		ofSetColor(0);
+		_FontAriblk.drawString(strDate_, cPHOTO_DATE_POS.x, cPHOTO_DATE_POS.y);
 		ofPopStyle();
 	}
 	Canvas_.end();
-
+	
 	ofPixels pix_;
 	Canvas_.readToPixels(pix_);
 	_MixResult.setFromPixels(pix_.getPixels(), Canvas_.getWidth(), Canvas_.getHeight(), OF_IMAGE_COLOR_ALPHA);
 	
 	pPhoto_->updateImg(_MixResult);
 	pPhoto_->SetVisible(true);
-
+	
 	_bCanSavePhoto = true;
 }
 
@@ -793,8 +820,15 @@ void Arcadyan::savePicture()
 {
 	if(_bCanSavePhoto)
 	{
-		_MixResult.saveImage(ofGetTimestampString("photos/%Y%m%d_%H%M.png"));
-		_MixResult.clear();
+		thread t(
+			[&]()
+			{
+				_MixResult.saveImage(ofGetTimestampString("photos/%Y%m%d_%H%M.png"));
+				_MixResult.clear();
+				ofLog(OF_LOG_NOTICE, "[Arcadyan]Save photo success.");
+			}
+		);
+		t.detach();		
 		_bCanSavePhoto = false;
 	}
 }
@@ -885,8 +919,12 @@ void Arcadyan::onFactoryEvent(string& e)
 //--------------------------------------------------------------
 void Arcadyan::setupAudioMgr()
 {
+	//BGM
 	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_OPEN, "audios/bgm_open.mp3");
 	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_INTRO, "audios/bgm_intro.mp3");
 	AudioMgr::GetInstance()->addBGM(NAME_MANAGER::BGM_MAIN, "audios/bgm_main.mp3");
+
+	//Audio
+	AudioMgr::GetInstance()->addAduio(NAME_MANAGER::AE_CAMERA, "audios/Camera.wav");
 }
 #pragma endregion

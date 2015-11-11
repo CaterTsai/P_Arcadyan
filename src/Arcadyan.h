@@ -5,7 +5,7 @@
 
 #include "protocol.h"
 #include "VideoManager.h"
-#include "ofGstVideoPlayer.h"
+//#include "ofGstVideoPlayer.h"
 #include "ArcadyanTheatre.h"
 #include "NameManager.h"
 #include "InfoDisplay.h"
@@ -46,6 +46,7 @@ public:
 
 	void resetTheatre();
 public:
+	ofxAnimatableFloat	_AnimCameraLight;
 	ArcadyanTheatre	_Arcadyan;
 
 //-------------------------------------------------
@@ -143,6 +144,7 @@ public:
 private:
 	ofImage			_MixResult;
 	bool			_bCanSavePhoto;
+	ofTrueTypeFont	_FontAriblk;
 	VirticalSlider	_PhotoFrameSlider;
 
 //-------------------------------------------------

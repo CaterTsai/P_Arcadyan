@@ -3,9 +3,9 @@
 #pragma region Base Methon
 void GreenBuildingCtrl::setupGreenBuildingCtrl()
 {
-	_GreenBuildingLoop.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
-	_GreenBuildingLoop.setLoopState(ofLoopType::OF_LOOP_NORMAL);
-	_GreenBuildingLoop.loadMovie("videos/Greenbuilding_loop.mp4");
+	//_GreenBuildingLoop.setPlayer(ofPtr<ofGstVideoPlayer>(new ofGstVideoPlayer));
+	//_GreenBuildingLoop.setLoopState(ofLoopType::OF_LOOP_NORMAL);
+	_GreenBuildingLoop.loadMovie("videos/Greenbuilding_loop.mov");
 
 	_GreenBuilding.setPlayer(ofPtr<ofxHapPlayer>(new ofxHapPlayer));
 	_GreenBuilding.setLoopState(ofLoopType::OF_LOOP_NORMAL);
